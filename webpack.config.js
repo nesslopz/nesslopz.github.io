@@ -3,31 +3,96 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const ImageMinimizerPlugin = require('image-minimizer-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const isProduction = process.env.NODE_ENV === 'production';
 
-
 const stylesHandler = isProduction ? MiniCssExtractPlugin.loader : 'style-loader';
 
-
-
-const config = {
+module.exports = {
+    mode: isProduction ? 'production' : 'development',
     entry: './src/index.js',
     output: {
         path: path.resolve(__dirname, 'dist'),
+        clean: isProduction,
     },
     devServer: {
         open: true,
         host: '0.0.0.0',
         port: 3000,
     },
+    optimization: {
+        minimizer: [
+            new ImageMinimizerPlugin({
+                minimizer: {
+                    implementation: ImageMinimizerPlugin.sharpMinify,
+                    filename: 'images/[name][ext]',
+                    options: {
+                        encodeOptions: {
+                            jpeg: {
+                                // https://sharp.pixelplumbing.com/api-output#jpeg
+                                quality: 90,
+                            },
+                            webp: {
+                                // https://sharp.pixelplumbing.com/api-output#webp
+                                lossless: true,
+                            },
+                            avif: {
+                                // https://sharp.pixelplumbing.com/api-output#avif
+                                lossless: true,
+                            },
+
+                            // png by default sets the quality to 90%, which is same as lossless
+                            // https://sharp.pixelplumbing.com/api-output#png
+                            png: {
+                                quality: 90,
+                            },
+
+                            // gif does not support lossless compression at all
+                            // https://sharp.pixelplumbing.com/api-output#gif
+                            gif: {},
+                        }
+                    },
+                },
+            }),
+        ],
+    },
     plugins: [
         new HtmlWebpackPlugin({
             template: 'src/index.html',
         }),
-
-        // Add your plugins here
-        // Learn more about plugins from https://webpack.js.org/configuration/plugins/
+        new MiniCssExtractPlugin(),
+        /* new CopyWebpackPlugin({
+            patterns: [
+                {
+                    from: path.resolve(__dirname, 'src/images'),
+                    to: 'images'
+                },
+            ],
+        }),
+        new ImageMinimizerPlugin({
+            generator: [
+                {
+                    type: 'asset',
+                    implementation: ImageMinimizerPlugin.sharpMinify,
+                    options: {
+                        resize: {
+                            width: 50, // half of the original size
+                            unit: 'percent',
+                        },
+                    },
+                    filename: 'images/[name]@1x[ext]',
+                },
+                {
+                    type: 'asset',
+                    implementation: ImageMinimizerPlugin.sharpMinify,
+                    options: {
+                    },
+                    filename: 'images/[name]@2x[ext]',
+                }
+            ],
+        }) */
     ],
     module: {
         rules: [
@@ -40,38 +105,16 @@ const config = {
                 use: [stylesHandler, 'css-loader', 'postcss-loader'],
             },
             {
-                test: /\.(eot|svg|ttf|woff|woff2|png|jpg|gif)$/i,
-                type: 'asset',
+                test: /\.(eot|svg|ttf|woff|woff2|png|jpe?g|gif)$/i,
+                type: 'asset/resource',
+                generator: {
+                    filename: 'images/[name][ext]',
+                }
             },
-
             {
                 test: /\.html$/i,
-                use: ['html-loader'],
+                use: [ 'html-loader' ],
             },
-
-            // Add your rules for custom modules here
-            // Learn more about loaders from https://webpack.js.org/loaders/
         ],
     },
-};
-
-module.exports = () => {
-    if (isProduction) {
-        config.mode = 'production';
-
-        config.plugins.push(new MiniCssExtractPlugin());
-    } else {
-        config.mode = 'development';
-    }
-
-    // Agregar regla para manejar imágenes
-    config.module.rules.push({
-        test: /\.(png|jpg|jpeg|gif|svg)$/i, // Archivos de imagen
-        type: 'asset/resource', // Copia las imágenes al directorio de salida
-        generator: {
-            filename: 'images/[name][ext]', // Define la estructura de salida
-        },
-    });
-
-    return config;
 };
