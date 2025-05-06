@@ -2,14 +2,14 @@ import "./styles.css";
 
 const SAFARI_SNAP_FIX_TIMEOUT = 200;
 
-const $sections      = document.querySelectorAll('.section');
-const $sliders       = document.querySelectorAll('.slider');
-const isSafari       = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-const initialHash    = window.location.hash;
+const $sections = document.querySelectorAll('.section');
+const $sliders = document.querySelectorAll('.slider');
+const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+const initialHash = window.location.hash;
 
-let   currentSection = 0;
-let   isScrolling    = false;
-let   scrollWheel    = 0;
+let currentSection = 0;
+let isScrolling = false;
+let scrollWheel = 0;
 
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -46,10 +46,10 @@ document.addEventListener('DOMContentLoaded', () => {
       const pos = parseInt(slider.scrollLeft / slider.offsetWidth);
       const intersectionNextSlide = (slider.scrollLeft % slider.offsetWidth) / slider.offsetWidth;
 
-      if ( direction === 'next' && intersectionNextSlide >= 0.1 ) {
+      if (direction === 'next' && intersectionNextSlide >= 0.1) {
         const nextSlide = pos + 1;
         slider.scrollTo({ left: nextSlide * slider.offsetWidth, behavior: 'smooth' });
-      } else if ( direction === 'prev' && intersectionNextSlide <= 0.8 ) {
+      } else if (direction === 'prev' && intersectionNextSlide <= 0.8) {
         const prevSlide = pos;
         slider.scrollTo({ left: prevSlide * slider.offsetWidth, behavior: 'smooth' });
       } else {
@@ -107,7 +107,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       if (!isSafari) {
-        console.log(scrollWheel, event.deltaMode, event.deltaX, event.deltaY);
         if (scrollWheel < -1 || scrollWheel > 1) {
           isScrolling = true;
           setTimeout(() => {
@@ -125,18 +124,33 @@ document.addEventListener('DOMContentLoaded', () => {
       const $slideToShow = document.querySelector(initialHash);
       if ($slideToShow) {
         $slideToShow.scrollIntoView({ behavior: 'smooth' });
+        scrollWheel = 0;
+        isScrolling = false;
       }
     }
 
     window.addEventListener('popstate', (event) => {
-      if ( location.hash && location.hash !== "" ) {
+      if (location.hash && location.hash !== "") {
         const $slideToShow = document.querySelector(location.hash);
         if ($slideToShow) {
           setTimeout(() => {
             $slideToShow.scrollIntoView({ behavior: 'smooth' });
+            scrollWheel = 0;
+            isScrolling = false;
           }, 0);
         }
       }
     });
+
+    const $giftsSecionVideo = document.querySelector('#love');
+    if ($giftsSecionVideo) {
+      $giftsSecionVideo.addEventListener('click', () => {
+        if ( $giftsSecionVideo.paused ) {
+          $giftsSecionVideo.play();
+        } else {
+          $giftsSecionVideo.pause();
+        }
+      });
+    }
   }
 });
