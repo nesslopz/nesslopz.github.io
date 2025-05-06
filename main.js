@@ -1,1 +1,166 @@
-(()=>{"use strict";var o=document.querySelectorAll(".section"),e=document.querySelectorAll(".slider"),t=/^((?!chrome|android).)*safari/i.test(navigator.userAgent),n=window.location.hash,i=0,r=!1,l=0;document.addEventListener("DOMContentLoaded",(function(){if(/Mobi|Movi|Android/i.test(navigator.userAgent))window.addEventListener&&(window.addEventListener("load",(function(){setTimeout((function(){window.scrollTo(0,0)}),0)})),window.addEventListener("orientationchange",(function(){setTimeout((function(){window.scrollTo(0,0)}),0)})));else{var s=function(){var o=arguments.length>0&&void 0!==arguments[0]?arguments[0]:"";if(o){var t=e[i],n=parseInt(t.scrollLeft/t.offsetWidth),l=t.scrollLeft%t.offsetWidth/t.offsetWidth;if("next"===o&&l>=.1){var s=n+1;t.scrollTo({left:s*t.offsetWidth,behavior:"smooth"})}else if("prev"===o&&l<=.8){var a=n;t.scrollTo({left:a*t.offsetWidth,behavior:"smooth"})}else t.scrollTo({left:n*t.offsetWidth,behavior:"smooth"});r=!1}},a=new IntersectionObserver((function(o){o.forEach((function(o){1===o.intersectionRatio&&setTimeout((function(){l=0,r=!1}),1e3)}))}),{threshold:1});o.forEach((function(o){return a.observe(o)}));var c=null;if(document.addEventListener("wheel",(function(n){var a=e[i];c&&clearTimeout(c),0!==n.deltaX||r||(n.deltaY>0?(l++,a.scrollLeft+a.offsetWidth>=a.scrollWidth||a.scrollWidth-(a.scrollLeft+a.offsetWidth)==1?i<o.length-1&&(r=!0,i++,o[i].scrollIntoView({behavior:"smooth"})):(a.scrollBy({left:n.deltaY,behavior:"smooth"}),t&&(c=setTimeout((function(){r=!0,s("next")}),200)))):n.deltaY<0&&(l--,0===a.scrollLeft?i>0&&(r=!0,i--,o[i].scrollIntoView({behavior:"smooth"})):(a.scrollBy({left:n.deltaY,behavior:"smooth"}),t&&(c=setTimeout((function(){r=!0,s("prev")}),200)))),t||(console.log(l,n.deltaMode,n.deltaX,n.deltaY),(l<-1||l>1)&&(r=!0,setTimeout((function(){l=0,r=!1}),1e3))))})),n){var d=document.querySelector(n);d&&d.scrollIntoView({behavior:"smooth"})}window.addEventListener("popstate",(function(o){if(location.hash&&""!==location.hash){var e=document.querySelector(location.hash);e&&setTimeout((function(){e.scrollIntoView({behavior:"smooth"})}),0)}}))}}))})();
+/******/ (() => { // webpackBootstrap
+/******/ 	"use strict";
+
+var SAFARI_SNAP_FIX_TIMEOUT = 200;
+var $sections = document.querySelectorAll('.section');
+var $sliders = document.querySelectorAll('.slider');
+var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+var initialHash = window.location.hash;
+var currentSection = 0;
+var isScrolling = false;
+var scrollWheel = 0;
+document.addEventListener('DOMContentLoaded', function () {
+  if (/Mobi|Movi|Android/i.test(navigator.userAgent)) {
+    // Mobile devices
+    if (window.addEventListener) {
+      window.addEventListener("load", function () {
+        setTimeout(function () {
+          window.scrollTo(0, 0);
+        }, 0);
+      });
+      window.addEventListener("orientationchange", function () {
+        setTimeout(function () {
+          window.scrollTo(0, 0);
+        }, 0);
+      });
+    }
+  } else {
+    // Desktop devices
+    var observeSections = function observeSections(entries) {
+      entries.forEach(function (entry) {
+        if (entry.intersectionRatio === 1) {
+          setTimeout(function () {
+            scrollWheel = 0;
+            isScrolling = false;
+          }, 1000);
+        }
+      });
+    };
+
+    /* Safari fix to snap sections automatically (emulates auto-snap) */
+    var snapSection = function snapSection() {
+      var direction = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+      if (!direction) return;
+      var slider = $sliders[currentSection];
+      var pos = parseInt(slider.scrollLeft / slider.offsetWidth);
+      var intersectionNextSlide = slider.scrollLeft % slider.offsetWidth / slider.offsetWidth;
+      if (direction === 'next' && intersectionNextSlide >= 0.1) {
+        var nextSlide = pos + 1;
+        slider.scrollTo({
+          left: nextSlide * slider.offsetWidth,
+          behavior: 'smooth'
+        });
+      } else if (direction === 'prev' && intersectionNextSlide <= 0.8) {
+        var prevSlide = pos;
+        slider.scrollTo({
+          left: prevSlide * slider.offsetWidth,
+          behavior: 'smooth'
+        });
+      } else {
+        slider.scrollTo({
+          left: pos * slider.offsetWidth,
+          behavior: 'smooth'
+        });
+      }
+      isScrolling = false;
+    };
+    var sectionsObserver = new IntersectionObserver(observeSections, {
+      threshold: 1.0
+    });
+    $sections.forEach(function (section) {
+      return sectionsObserver.observe(section);
+    });
+    var snapSectionTimer = null;
+    document.addEventListener('wheel', function (event) {
+      var slider = $sliders[currentSection];
+      if (snapSectionTimer) clearTimeout(snapSectionTimer);
+      if (event.deltaX !== 0 || isScrolling) return;
+      if (event.deltaY > 0) {
+        // Scroll down
+        scrollWheel++;
+        if (slider.scrollLeft + slider.offsetWidth >= slider.scrollWidth || slider.scrollWidth - (slider.scrollLeft + slider.offsetWidth) === 1) {
+          // Last slide
+          if (currentSection < $sections.length - 1) {
+            // Next section
+            isScrolling = true;
+            currentSection++;
+            $sections[currentSection].scrollIntoView({
+              behavior: 'smooth'
+            });
+          }
+        } else {
+          slider.scrollBy({
+            left: event.deltaY,
+            behavior: 'smooth'
+          });
+          if (isSafari) {
+            // Force snap behavior in Safari
+            snapSectionTimer = setTimeout(function () {
+              isScrolling = true;
+              snapSection('next');
+            }, SAFARI_SNAP_FIX_TIMEOUT);
+          }
+        }
+      } else if (event.deltaY < 0) {
+        // Scroll up
+        scrollWheel--;
+        if (slider.scrollLeft === 0) {
+          if (currentSection > 0) {
+            // Previous section
+            isScrolling = true;
+            currentSection--;
+            $sections[currentSection].scrollIntoView({
+              behavior: 'smooth'
+            });
+          }
+        } else {
+          slider.scrollBy({
+            left: event.deltaY,
+            behavior: 'smooth'
+          });
+          if (isSafari) {
+            // Force snap behavior in Safari
+            snapSectionTimer = setTimeout(function () {
+              isScrolling = true;
+              snapSection('prev');
+            }, SAFARI_SNAP_FIX_TIMEOUT);
+          }
+        }
+      }
+      if (!isSafari) {
+        console.log(scrollWheel, event.deltaMode, event.deltaX, event.deltaY);
+        if (scrollWheel < -1 || scrollWheel > 1) {
+          isScrolling = true;
+          setTimeout(function () {
+            scrollWheel = 0;
+            isScrolling = false;
+          }, 1000);
+        }
+      }
+
+      /* Enable animations here */
+    });
+    if (initialHash) {
+      var $slideToShow = document.querySelector(initialHash);
+      if ($slideToShow) {
+        $slideToShow.scrollIntoView({
+          behavior: 'smooth'
+        });
+      }
+    }
+    window.addEventListener('popstate', function (event) {
+      if (location.hash && location.hash !== "") {
+        var _$slideToShow = document.querySelector(location.hash);
+        if (_$slideToShow) {
+          setTimeout(function () {
+            _$slideToShow.scrollIntoView({
+              behavior: 'smooth'
+            });
+          }, 0);
+        }
+      }
+    });
+  }
+});
+/******/ })()
+;

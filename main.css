@@ -4430,6 +4430,7 @@ template {
   --white         : #FFFFFF;
   --primary-light : #BC098F;
   --secondary-teal: #0D5F71;
+  --animate-delay: 0.5s;
 }
 
 /* .animate__delay-1s { --animation-delay }
@@ -4537,14 +4538,12 @@ h2 {
   font-weight: 300;
   font-size: 48px;
   line-height: 42px;
-  letter-spacing: 2.4px;
 }
 h3 {
   font-family: 'Cormorant';
   font-weight: 500;
   font-size: 32px;
   line-height: 34px;
-  letter-spacing: 0;
   color: var(--secondary-teal)
 }
 
@@ -4628,28 +4627,40 @@ img  {
   margin: 0;
 }
 
-.scale-img {
+.img-effect-scale {
   position: relative;
   overflow: hidden;
   width: 100%;
   & img {
-    transition: transform 500ms ease, filter 300ms ease-in-out;
+    transition: transform 500ms ease-in-out;
     transform-origin: top center;
-
-    filter: brightness(100%);
     &:hover{
       -o-object-fit: cover;
          object-fit: cover;
       transform: scale(1.25);
-      transition: transform 2s ease-in-out, filter 3s ease-out;
-      filter: brightness(125%) grayscale(50%);
+      transition: transform 2s ease-in;
     }
   }
+}
+img.img-effect-grayscale,
+.img-effect-grayscale img {
+  filter: grayscale(0%) brightness(120%);
+  transition: filter 500ms ease, transform 500ms ease;
+  transform: perspective(1000px) rotateY(0deg);
+  &:hover {
+    transition: filter 2s linear, transform 2s ease;
+    filter: grayscale(100%) brightness(120%);
+    transform: perspective(1000px) rotateY(10deg);
+  }
+}
+img.img-effect-grayscale:nth-child(even):hover,
+.img-effect-grayscale:nth-child(even) img:hover {
+  transform: perspective(1000px) rotateY(-10deg);
 }
 
 /* Section 1 */
 .home {
-  background: var(--white) url(images/1-hero-image-1920x.png) no-repeat center center;
+  background: var(--white) url(images/1-hero-image.png) no-repeat center center;
   background-size: cover;
   animation: home-bg 3s ease-out;
   &:after {
@@ -4701,7 +4712,7 @@ img  {
   font-weight: 400;
   font-size: 40px;
   line-height: 34px;
-  letter-spacing: 2px;
+  letter-spacing: 0;
 
   color: var(--primary);
   position: absolute;
@@ -4745,7 +4756,7 @@ img  {
     flex: 1 0 auto;
     margin-right: 29px;
     &:after {
-      content: ' hrs';
+      content: ' hrs.';
     }
   }
   & span {
@@ -4798,6 +4809,7 @@ img  {
       font-family: 'Plus Jakarta Sans';
       font-weight: 400;
       font-size: 20px;
+      font-style: normal;
       display: block;
       margin-top: 13px;
       &:before {
@@ -4862,7 +4874,7 @@ img  {
 /* Section 1.3 */
 .activities {
   display: grid;
-  grid-template-columns: repeat(3, 304px);
+  grid-template-columns: repeat(3, 23%);
   justify-content: space-between;
   padding-top: 100px;
   padding-bottom: 60px;
@@ -4886,7 +4898,7 @@ img  {
     width     : 65%;
     height    : 22%;
     top       : -5%;
-    left      : -12%;
+    left      : -29%;
     --translation: -10%;
     --rotation: 5.25deg;
     transform: rotate(0deg) translateY(0);
@@ -4895,7 +4907,7 @@ img  {
     width: 50%;
     height: 45%;
     bottom: -22%;
-    left: 10%;
+    right: 30%;
 
     --rotation: -5deg;
     --translation: -10%;
@@ -4908,30 +4920,31 @@ img  {
 
 /* Section 1.4: Details */
 .details {
+  padding-top: 100px;
+  padding-right: 0;
+  &::before {
+    content: '';
+    position: absolute;
+    display: block;
+    background: transparent none no-repeat center center;
+    background-size: contain;
+    opacity: 0;
+    --rotation: 0deg;
+    --translation: 30px;
 
-&::before {
-  content: '';
-  position: absolute;
-  display: block;
-  background: transparent none no-repeat center center;
-  background-size: contain;
-  opacity: 0;
-  --rotation: 0deg;
-  --translation: 30px;
+    width: 42%;
+    height: 42%;
+    top: -120px;
+    right: -65px;
 
-  width: 42%;
-  height: 42%;
-  top: -120px;
-  right: -65px;
-
-  background-image: url(images/flores4.png);
-  transform: rotate(-5deg) translateY(0);
-  animation: flowers 3s 0s ease-out forwards;
-}
+    background-image: url(images/flores4.png);
+    transform: rotate(-5deg) translateY(0);
+    animation: flowers 3s 0s ease-out forwards;
+  }
 }
 .details-image {
   display: block;
-  width: 40vw;
+  width: 45vw;
   height: auto;
   margin: 0;
   position: absolute;
@@ -4940,28 +4953,40 @@ img  {
   transform: translateX(50%);
 }
 .details-section {
-  display: flex;
-  flex-flow: column wrap;
-  align-items: flex-end;
+  display: grid;
+  grid-template-columns: 25% 1fr 22% 22%;
+  grid-template-rows: 24px auto auto;
+  align-items: flex-start;
   justify-content: flex-end;
-  gap: 74px;
-  width: 90%;
+  gap: 36px 0;
   height: 100%;
-  margin-left: auto;
-  & .info {
-    width: 50%;
-    &:nth-child(1) {
-      width: auto;
-      margin: 5% 0 auto;
-      & .info-description p { width: 170px; }
-    }
-    &:nth-child(2) {
-      width: auto;
-      margin: auto;
-      & .info-description p { width: 320px; }
-    }
+  & .info-rsvp {
+    justify-self: flex-end;
+    margin: 0 56px;
+    grid-area: 1 / 2 / 3 / 3;
+    & .info-description p { width: 200px; }
+  }
+  & .info-dress-code {
+    grid-area: 3 / 1 / 4 / 3;
+    margin: 0 15%;
+    & .info-description p { width: 324px; }
+  }
+  & .info-kids {
+    grid-area: 3 / 3 / 4 / 4;
+    padding-right: 30%;
+  }
+  & .image-1 {
+    grid-area: 2 / 3 / 3 / 4;
+  }
+  & .image-2 {
+    grid-area: 3 / 4 / 4 / 5;
+    position: relative;
+    left: -20%;
+    top: -38%;
   }
   & .info-description {
+    font-size: 18px;
+    line-height: 30px;
     gap: 22px;
     & h3 {
       width: -moz-min-content;
@@ -4972,34 +4997,35 @@ img  {
     }
   }
 }
-.details-grid {
-  display: grid;
-  grid-template-columns: 300px 300px;
-  grid-template-rows: auto auto;
-  width: 50%;
-  height: 100%;
-  & .image-1 {
-    grid-area: 1 / 1 / 2 / 2;
-  }
-  & .image-2 {
-    grid-area: 2 / 2 / 3 / 3;
-    position: relative;
-    margin-left: -84px;
-    margin-top: -130px;
-  }
-  & .info {
-    /* width: 190px;
-    margin-right: auto; */
-    margin: 0;
-    width: auto;
-    padding-right: 100px;
-    grid-area: 2 / 1 / 3 / 2
-  }
-}
 
 @keyframes flowers{
   100% {
     opacity: 1;
     transform: translateY(var(--translation)) rotate(var(--rotation));
+  }
+}
+
+/* Retina @2x */
+@media (-webkit-min-device-pixel-ratio: 2),
+(-o-min-device-pixel-ratio: 2/1),
+(min-device-pixel-ratio: 2) {
+  .home {
+    background-image: url(images/1-hero-image@2x.png);
+    &:after {
+      background-image: url(images/flores3@2x.png);
+    }
+  }
+  .activities {
+    &::before {
+      background-image: url(images/flores5@2x.png);
+    }
+    &::after {
+      background-image: url(images/flores6@2x.png);
+    }
+  }
+  .details {
+    &::before {
+      background-image: url(images/flores4@2x.png);
+    }
   }
 }
