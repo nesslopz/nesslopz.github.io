@@ -25,4 +25,10 @@ jobs:
     - name: Build
       run: |
         npm install
-        npm run build && npm run deploy
+        npm run Build
+
+    - name: Deploy
+    uses: peaceiris/actions-gh-pages@v4
+    with:
+      github_token: ${{ secrets.GH_TOKEN }}
+      publish_dir: ./dist
