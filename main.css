@@ -4619,6 +4619,7 @@ h3 {
   justify-content: stretch;
 }
 
+video,
 img  {
   max-width: 100%;
   border: 0;
@@ -4724,6 +4725,12 @@ img.img-effect-grayscale:nth-child(even):hover,
 
 .info {
   display: block;
+  font-size: 18px;
+  line-height: 30px;
+  & span {
+    font-size: 24px;
+    line-height: 30px;
+  }
   & h2 {
     display: block;
     &:after {
@@ -4914,6 +4921,14 @@ img.img-effect-grayscale:nth-child(even):hover,
     background-image: url(images/flores6.png);
     transform: rotate(0deg) translateY(0);
   }
+  & .info {
+    font-size: 16px;
+    line-height: 26px;
+    & span {
+      font-size: 22px;
+      line-height: 26px;
+    }
+  }
   & > .info:nth-child(1) { align-self: flex-start; }
   & > .info:nth-child(3) { align-self: flex-end; }
 }
@@ -4974,6 +4989,8 @@ img.img-effect-grayscale:nth-child(even):hover,
   & .info-kids {
     grid-area: 3 / 3 / 4 / 4;
     padding-right: 30%;
+    font-size: 16px;
+    line-height: 26px;
   }
   & .image-1 {
     grid-area: 2 / 3 / 3 / 4;
@@ -4985,8 +5002,6 @@ img.img-effect-grayscale:nth-child(even):hover,
     top: -38%;
   }
   & .info-description {
-    font-size: 18px;
-    line-height: 30px;
     gap: 22px;
     & h3 {
       width: -moz-min-content;
@@ -4996,6 +5011,186 @@ img.img-effect-grayscale:nth-child(even):hover,
       margin-top: 0;
     }
   }
+}
+
+/* Section 2.1: Muestras de amor */
+.slide.gifts {
+  /* Flores */
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    display: block;
+    background: transparent none no-repeat center center;
+    background-size: contain;
+
+    opacity: 0;
+    --rotation: 0deg;
+    --translation: 0;
+    transform: rotate(var(--rotation)) translateY(var(--translation));
+    animation: flowers 3s 1s ease-out forwards;
+  }
+  &::before {
+    background-image: url(images/flores1.png);
+    width           : 35%;
+    height          : 45%;
+    bottom          : -10%;
+    left            : -10%;
+    --translation   : -5%;
+    --rotation      : 11.18deg;
+    transform       : rotate(0deg) translateY(0);
+  }
+  &::after {
+    width : 60%;
+    height: 70%;
+    top   : -10%;
+    right : -25%;
+
+    --rotation: 10.85deg;
+    --translation: -10%;
+    background-image: url(images/flores2.png);
+    transform: rotate(0deg) translateY(0);
+  }
+}
+.gifts-section {
+  display: grid;
+  grid-template-columns: 30% 1fr 28%;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 76px;
+  z-index: 1;
+  height: 100%;
+  & .video-gifts {
+    & video {
+      height: 100%;
+      width: auto;
+    }
+  }
+  & .info {
+    margin-top: 48px;
+    line-height: 34px;
+    span {
+      line-height: 34px;
+    }
+  }
+  & .gifts-section-img {
+    align-self: flex-end;
+  }
+  & .gift-links {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    margin-top: 30px;
+    & a {
+      border-bottom: 0;
+      text-decoration: none;
+      transition: transform 500ms ease-out;
+      &:hover {
+        transform: scale(1.05);
+      }
+      &:after {
+        content: none;
+      }
+    }
+  }
+}
+
+/* Section 2.2 Factos I */
+.slide-factos {
+  /* Flores */
+  &::before {
+    content: '';
+    position: absolute;
+    display: block;
+    background: transparent none no-repeat center center;
+    background-size: contain;
+    background-image: url(images/flores6.png);
+    opacity: 0;
+
+    animation: flowers 3s 1s ease-out forwards;
+
+    width: 40%;
+    height: 35%;
+    bottom: -22%;
+    left: 6%;
+
+    --rotation: -5deg;
+    --translation: -10%;
+    transform: rotate(0deg) translateY(0);
+  }
+}
+.factos-section {
+  display: grid;
+  grid-template-columns: 400px 1fr 1fr;
+  align-items: stretch;
+  padding-top: 70px;
+  gap: 0 20px;
+  height: 100%;
+  & span {
+    color: var(--primary);
+    font-size: 28px;
+    line-height: 30px;
+    font-weight: 500;
+    font-style: italic;
+  }
+  & .column:nth-child(1) {
+    .info-description {
+      max-width: 320px;
+      margin-top: 38px;
+    }
+  }
+  & .column:nth-child(2) {
+    margin: auto 0;
+    & img {
+      width: 260px;
+    }
+    & p {
+      margin-top: 48px;
+      max-width: 280px;
+    }
+  }
+  & .column:nth-child(3) {
+    margin: auto 0 20%;
+    & img {
+      width: 236px;
+      /* margin-top: 60px; */
+      position: relative;
+      left: -15%;
+      top: 60px;
+    }
+    & p {
+      max-width: 382px;
+      margin: auto;
+    }
+  }
+}
+.factos-image-up,
+.factos-image-down {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 0;
+  position: absolute;
+  top: 0;
+  right: 0;
+  & img {
+    height: 100%;
+    width: auto;
+  }
+}
+.factos-image-up {
+  height: 30vh;
+  width: auto;
+  transform: translateX(10%);
+}
+.factos-image-down {
+  top: auto;
+  bottom: 0;
+  height: 40vh;
+  width: auto;
+  transform: translateX(50%);
 }
 
 @keyframes flowers{
@@ -5015,17 +5210,16 @@ img.img-effect-grayscale:nth-child(even):hover,
       background-image: url(images/flores3@2x.png);
     }
   }
-  .activities {
-    &::before {
-      background-image: url(images/flores5@2x.png);
-    }
-    &::after {
-      background-image: url(images/flores6@2x.png);
-    }
+  .activities::before {
+    background-image: url(images/flores5@2x.png);
   }
-  .details {
-    &::before {
-      background-image: url(images/flores4@2x.png);
-    }
+  .activities::after {
+    background-image: url(images/flores6@2x.png);
+  }
+  .slide-factos::before {
+    background-image: url(images/flores6@2x.png);
+  }
+  .details::before {
+    background-image: url(images/flores4@2x.png);
   }
 }
