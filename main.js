@@ -10,6 +10,7 @@ var currentSection = 0;
 var isScrolling = false;
 var scrollWheel = 0;
 document.addEventListener('DOMContentLoaded', function () {
+  if (!$sections.length || !$sliders.length) return;
   if (/Mobi|Movi|Android/i.test(navigator.userAgent)) {
     // Mobile devices
     if (window.addEventListener) {
