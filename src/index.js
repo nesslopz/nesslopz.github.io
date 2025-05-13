@@ -13,6 +13,8 @@ let scrollWheel = 0;
 
 
 document.addEventListener('DOMContentLoaded', () => {
+  if (!$sections.length || !$sliders.length) return;
+
   if (/Mobi|Movi|Android/i.test(navigator.userAgent)) { // Mobile devices
     if (window.addEventListener) {
       window.addEventListener("load", function () {

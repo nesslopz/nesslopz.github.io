@@ -32,7 +32,7 @@ module.exports = {
                         encodeOptions: {
                             jpeg: {
                                 // https://sharp.pixelplumbing.com/api-output#jpeg
-                                quality: 90,
+                                quality: 100,
                             },
                             webp: {
                                 // https://sharp.pixelplumbing.com/api-output#webp
@@ -42,11 +42,10 @@ module.exports = {
                                 // https://sharp.pixelplumbing.com/api-output#avif
                                 lossless: true,
                             },
-
                             // png by default sets the quality to 90%, which is same as lossless
                             // https://sharp.pixelplumbing.com/api-output#png
                             png: {
-                                quality: 90,
+                                quality: 100,
                             },
 
                             // gif does not support lossless compression at all
@@ -62,15 +61,20 @@ module.exports = {
         new HtmlWebpackPlugin({
             template: 'src/index.html',
         }),
+        new HtmlWebpackPlugin({
+            template: 'src/rsvp/index.html',
+            filename: 'rsvp/index.html',
+        }),
         new MiniCssExtractPlugin(),
         /* new CopyWebpackPlugin({
             patterns: [
                 {
-                    from: path.resolve(__dirname, 'src/images'),
-                    to: 'images'
+                    from: path.resolve(__dirname, 'src/rsvp'),
+                    to: 'rsvp'
                 },
             ],
-        }),
+        }), */
+        /*
         new ImageMinimizerPlugin({
             generator: [
                 {

@@ -128,7 +128,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
       }
       if (!isSafari) {
-        console.log(scrollWheel, event.deltaMode, event.deltaX, event.deltaY);
         if (scrollWheel < -1 || scrollWheel > 1) {
           isScrolling = true;
           setTimeout(function () {
@@ -146,6 +145,8 @@ document.addEventListener('DOMContentLoaded', function () {
         $slideToShow.scrollIntoView({
           behavior: 'smooth'
         });
+        scrollWheel = 0;
+        isScrolling = false;
       }
     }
     window.addEventListener('popstate', function (event) {
@@ -156,10 +157,22 @@ document.addEventListener('DOMContentLoaded', function () {
             _$slideToShow.scrollIntoView({
               behavior: 'smooth'
             });
+            scrollWheel = 0;
+            isScrolling = false;
           }, 0);
         }
       }
     });
+    var $giftsSecionVideo = document.querySelector('#love');
+    if ($giftsSecionVideo) {
+      $giftsSecionVideo.addEventListener('click', function () {
+        if ($giftsSecionVideo.paused) {
+          $giftsSecionVideo.play();
+        } else {
+          $giftsSecionVideo.pause();
+        }
+      });
+    }
   }
 });
 /******/ })()
