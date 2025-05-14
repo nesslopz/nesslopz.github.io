@@ -282,7 +282,7 @@ img.img-effect-grayscale:nth-child(even):hover,
 
 /* Section 1 */
 .home {
-  background: var(--white) url('./images/1-hero-image.png') no-repeat center center;
+  background: var(--white) url('./images/1-hero-image-1920x.png') no-repeat center center;
   background-size: cover;
   animation: home-bg 3s ease-out;
   &:after {
@@ -823,7 +823,7 @@ img.img-effect-grayscale:nth-child(even):hover,
   transform: translateX(50%);
 }
 
-/* Section 2.4 Factos II */
+/* Section 2.3 Factos II */
 .slide-factos-ii {
   padding: 0 60px;
 }
@@ -889,6 +889,189 @@ img.img-effect-grayscale:nth-child(even):hover,
 
 }
 
+/* Section 3.1 Damas */
+.slide.bridesmaids {
+  /* Flores */
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    display: block;
+    background: transparent none no-repeat center center;
+    background-size: contain;
+
+    opacity: 0;
+    --rotation: 0deg;
+    --translation: 0;
+    transform: rotate(var(--rotation)) translateY(var(--translation));
+    animation: flowers 3s 1s ease-out forwards;
+  }
+  &::before {
+    background-image: url('./images/flowers/flores4.png');
+    width           : 35%;
+    height          : 45%;
+    top             : -12%;
+    right           : -5%;
+    --translation   : -5%;
+    --rotation      : -3.9deg;
+    transform       : rotate(0deg) translateY(0);
+  }
+  &::after {
+    width : 40%;
+    height: 40%;
+    bottom: -10%;
+    left : 30%;
+
+    --rotation: -23.22deg;
+    --translation: -10%;
+    background-image: url('./images/flowers/bridesmaids-bouquet.png');
+    transform: rotate(0deg) translateY(0);
+  }
+}
+.bridesmaids-grid {
+  display: grid;
+  grid-template-columns: 414px 1fr;
+  justify-content: end;
+  align-items: center;
+  z-index: 1;
+}
+
+.parents {
+  display: block;
+  margin: 20px auto;
+  position: relative;
+  padding-right: 10px;
+  z-index: 1;
+  & img:nth-child(1) { margin-right: auto; }
+  & img:nth-child(2) { margin: -18px auto 0; z-index: -1; padding-right: 10px; }
+  & img:nth-child(3) { margin: -10px 5px 0 auto; }
+}
+
+/* Clan grid */
+.clan-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 220px);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 14px;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  width: 100%;
+  padding-left: 4em;
+  margin: auto;
+  & .clan-grid-title {
+    position: absolute;
+    left: 1.75em;
+    &.top {
+      top: 0;
+      transform-origin: left top;
+      transform: rotate(-90deg) translate(-100%, -100%);
+    }
+    &.bottom {
+      bottom: 0;
+      transform-origin: left bottom;
+      transform: rotate(-90deg);
+    }
+  }
+  &.damas {
+    & .clan-p {
+      &:nth-of-type(2),
+      &:nth-of-type(5) {
+        top: 5vh;
+      }
+    }
+  }
+}
+.clan-p {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr;
+  position: relative;
+  overflow: hidden;
+  &:after {
+    content: '';
+    display: block;
+    width: 100%;
+    height: 100%;
+    background-color: var(--secondary-teal);
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 0;
+    opacity: 0;
+    transition: opacity 0.5s linear;
+  }
+  & .clan-p-img,
+  & .clan-p-info {
+    grid-area: 1 / 1 / 2 / 2;
+  }
+  & .clan-p-img {
+    z-index: 0;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    object-position: center;
+    transition: transform 0.5s ease-in-out;
+    transform-origin: center center;
+    transform: translateX(0);
+    position: relative;
+  }
+  & .clan-p-info {
+    z-index: 1;
+    background-color: var(--alter);
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex-end;
+    align-items: flex-start;
+    padding: 5px 5px 5px 17px;
+    width: 70%;
+    justify-self: flex-end;
+    transform-origin: center center;
+    transform: translateX(100%);
+    transition: transform 0.5s ease-in-out;
+    & .clan-p-fname {
+      font-family: Cormorant Infant;
+      font-weight: 700;
+      font-style: italic;
+      font-size: 60px;
+      writing-mode: sideways-lr;
+      line-height: 100%;
+      letter-spacing: 0%;
+      opacity: .1;
+      color: var(--secondary-teal);
+      margin: 0 auto 0 -26px;
+    }
+    & .clan-p-name {
+      font-family: Cormorant Infant;
+      font-weight: 700;
+      font-size: 24px;
+      line-height: 100%;
+      letter-spacing: 0%;
+      color: var(--secondary-teal);
+      margin: auto 0 8px;
+    }
+    & .clan-p-desc {
+      font-family: Plus Jakarta Sans;
+      line-height: 1.05;
+      font-weight: 400;
+      font-size: 14px;
+      letter-spacing: 0;
+      margin-bottom: auto;
+    }
+  }
+  &:hover, &:active {
+    & .clan-p-info {
+      transform: translateX(0);
+    }
+    & .clan-p-img {
+      transform: translateX(-30%);
+    }
+    &:after {
+      opacity: 0.5;
+    }
+  }
+}
+
 @keyframes flowers{
   100% {
     opacity: 1;
@@ -901,7 +1084,6 @@ img.img-effect-grayscale:nth-child(even):hover,
 (-o-min-device-pixel-ratio: 2/1),
 (min-device-pixel-ratio: 2) {
   .home {
-    background-image: url('./images/1-hero-image@2x.png');
     &:after {
       background-image: url('./images/flowers/flores3@2x.png');
     }
@@ -923,6 +1105,12 @@ img.img-effect-grayscale:nth-child(even):hover,
   }
   .slide.gifts::after {
       background-image: url('./images/flowers/flores2@2x.png');
+  }
+  .slide.bridesmaids::before {
+    background-image: url('./images/flowers/flores4@2x.png');
+  }
+  .slide.bridesmaids::after {
+    background-image: url('./images/flowers/bridesmaids-bouquet@2x.png');
   }
 
 }
