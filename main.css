@@ -5343,7 +5343,7 @@ img.img-effect-grayscale:nth-child(even):hover,
     width : 40%;
     height: 40%;
     bottom: -10%;
-    left : 30%;
+    left : 22%;
 
     --rotation: -23.22deg;
     --translation: -10%;
@@ -5351,12 +5351,41 @@ img.img-effect-grayscale:nth-child(even):hover,
     transform: rotate(0deg) translateY(0);
   }
 }
-.bridesmaids-grid {
+.slide.groomsmen {
+  &::after {
+    content: '';
+    position: absolute;
+    display: block;
+    background: transparent none no-repeat center center;
+    background-image: url(images/flores1.png);
+    background-size: contain;
+    opacity: 0;
+
+    width           : 30%;
+    height          : 40%;
+    bottom          : -4%;
+    right            : -10%;
+    --translation   : -5%;
+    --rotation      : -54deg;
+    transform       : rotate(-50deg) translateY(0);
+
+    animation: flowers 3s 1s ease-out forwards;
+  }
+}
+
+.bridesmaids-grid,
+.groomsmen-grid {
   display: grid;
-  grid-template-columns: 414px 1fr;
-  justify-content: end;
+  grid-template-columns: 414px auto;
+  justify-content: space-between;
   align-items: center;
   z-index: 1;
+  width: 100%;
+}
+.groomsmen-grid {
+  grid-template-columns: auto 414px;
+  align-items: flex-start;
+  position: relative;
 }
 
 .parents {
@@ -5385,13 +5414,17 @@ img.img-effect-grayscale:nth-child(even):hover,
   & .clan-grid-title {
     position: absolute;
     left: 1.75em;
+    font-family: Plus Jakarta Sans;
+    font-size: 34px;
+    letter-spacing: 0;
+
     &.top {
       top: 0;
       transform-origin: left top;
       transform: rotate(-90deg) translate(-100%, -100%);
     }
     &.bottom {
-      bottom: 0;
+      bottom: -5vh;
       transform-origin: left bottom;
       transform: rotate(-90deg);
     }
@@ -5404,6 +5437,31 @@ img.img-effect-grayscale:nth-child(even):hover,
       }
     }
   }
+  &.damos {
+    & .clan-p {
+      &:nth-of-type(1), &:nth-of-type(4),
+      &:nth-of-type(3), &:nth-of-type(6) {
+        top: 5vh;
+      }
+    }
+    &:before {
+      content: '';
+      width: 160px;
+      height: 160px;
+      background: transparent url(images/groomsmen-bouquet.png) no-repeat center center;
+      background-size: contain;
+      opacity: 0;
+      position: absolute;
+      top: 0;
+      right: 0;
+      transform: translate(-80%, -60%);
+      transition: transform 500ms ease-out, opacity 500ms ease;
+    }
+  }
+}
+.slide-animated .clan-grid.damos:before {
+  opacity: 1;
+  transform: translate(-80%, -80%);
 }
 .clan-p {
   display: grid;
@@ -5494,7 +5552,21 @@ img.img-effect-grayscale:nth-child(even):hover,
     &:after {
       opacity: 0.5;
     }
+    &.left .clan-p-img {
+      transform: translateX(-15%);
+    }
+    &.right .clan-p-img {
+      transform: translateX(-50%);
+    }
   }
+}
+
+/* Section 3.3 - END - */
+.slide.end {
+  background: var(--white) url(images/3-cierre-MAH05809.png) no-repeat center center;
+  background-size: cover;
+  flex-flow: column nowrap;
+  justify-content: space-between;
 }
 
 @keyframes flowers{
