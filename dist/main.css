@@ -4421,6 +4421,10 @@ template {
   animation-name: slideOutUp;
 }
 
+* {
+  box-sizing: border-box;
+}
+
 :root {
   --primary       : #7E107E;
   --alter         : #BCD6BB;
@@ -4432,10 +4436,6 @@ template {
   --secondary-teal: #0D5F71;
   --animate-delay: 0.5s;
 }
-
-/* .animate__delay-1s { --animation-delay }
-.animate__delay-2s { --animation-delay }
-.animate__delay-3s { --animation-delay } */
 
 body,
 html {
@@ -4455,11 +4455,29 @@ html {
   letter-spacing: 0;
   color: var(--secondary);
 }
-
-* {
-  box-sizing: border-box;
+html.page-rsvp, html.page-rsvp body {
+  margin: 0;
+  padding: 0;
+  height: auto;
+  background-color: var(--white);
+  scroll-snap-type: none;
+  scroll-behavior: auto;
+  position: relative;
 }
-
+html.page-rsvp body {
+  overflow: hidden;
+  &:before {
+    content: '';
+    display: block;
+    width: 50%;
+    height: 50%;
+    background: transparent url(images/flores2.png) no-repeat bottom center;
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    transform: rotate(165deg) translateX(-25%) translateY(-15%);
+  }
+}
 body:before {
   content: '';
   height: 20vh;
@@ -4514,6 +4532,11 @@ a {
     overflow: initial;
   }
 
+  html.page-rsvp, html.page-rsvp body {
+    overflow: initial;
+    height: auto;
+  }
+
   .section {
     overflow: visible;
   }
@@ -4556,6 +4579,10 @@ h3 {
 
   body:before {
     display: none;
+  }
+
+  html.page-rsvp, html.page-rsvp body {
+    overflow: auto;
   }
 }
 
@@ -4649,13 +4676,13 @@ img  {
   overflow: hidden;
   width: 100%;
   & img {
-    transition: transform 500ms ease-in-out;
+    transition: transform 500ms cubic-bezier(0.33, 1, 0.68, 1);
     transform-origin: top center;
     &:hover{
       -o-object-fit: cover;
          object-fit: cover;
       transform: scale(1.25);
-      transition: transform 2s ease-in;
+      transition: transform 2s cubic-bezier(0.37, 0, 0.63, 1);
     }
   }
 }
@@ -4677,7 +4704,7 @@ img.img-effect-grayscale:nth-child(even):hover,
 
 /* Section 1 */
 .home {
-  background: var(--white) url(images/1-hero-image.png) no-repeat center center;
+  background: var(--white) url(images/1-hero-image-1920x.png) no-repeat center center;
   background-size: cover;
   animation: home-bg 3s ease-out;
   &:after {
@@ -4994,9 +5021,6 @@ img.img-effect-grayscale:nth-child(even):hover,
   justify-content: flex-end;
   gap: 36px 0;
   height: 100%;
-  & > * {
-    /* background-color: rgba(0,0,0,0.2); */
-  }
   & .info-rsvp {
     justify-self: flex-end;
     margin: 0 56px;
@@ -5222,7 +5246,7 @@ img.img-effect-grayscale:nth-child(even):hover,
   transform: translateX(50%);
 }
 
-/* Section 2.4 Factos II */
+/* Section 2.3 Factos II */
 .slide-factos-ii {
   padding: 0 60px;
 }
@@ -5288,6 +5312,263 @@ img.img-effect-grayscale:nth-child(even):hover,
 
 }
 
+/* Section 3.1 Damas */
+.slide.bridesmaids {
+  /* Flores */
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    display: block;
+    background: transparent none no-repeat center center;
+    background-size: contain;
+
+    opacity: 0;
+    --rotation: 0deg;
+    --translation: 0;
+    transform: rotate(var(--rotation)) translateY(var(--translation));
+    animation: flowers 3s 1s ease-out forwards;
+  }
+  &::before {
+    background-image: url(images/flores4.png);
+    width           : 35%;
+    height          : 45%;
+    top             : -12%;
+    right           : -5%;
+    --translation   : -5%;
+    --rotation      : -3.9deg;
+    transform       : rotate(0deg) translateY(0);
+  }
+  &::after {
+    width : 40%;
+    height: 40%;
+    bottom: -10%;
+    left : 22%;
+
+    --rotation: -23.22deg;
+    --translation: -10%;
+    background-image: url(images/bridesmaids-bouquet.png);
+    transform: rotate(0deg) translateY(0);
+  }
+}
+.slide.groomsmen {
+  &::after {
+    content: '';
+    position: absolute;
+    display: block;
+    background: transparent none no-repeat center center;
+    background-image: url(images/flores1.png);
+    background-size: contain;
+    opacity: 0;
+
+    width           : 30%;
+    height          : 40%;
+    bottom          : -4%;
+    right            : -10%;
+    --translation   : -5%;
+    --rotation      : -54deg;
+    transform       : rotate(-50deg) translateY(0);
+
+    animation: flowers 3s 1s ease-out forwards;
+  }
+}
+
+.bridesmaids-grid,
+.groomsmen-grid {
+  display: grid;
+  grid-template-columns: 414px auto;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 1;
+  width: 100%;
+}
+.groomsmen-grid {
+  grid-template-columns: auto 414px;
+  align-items: flex-start;
+  position: relative;
+}
+
+.parents {
+  display: block;
+  margin: 20px auto;
+  position: relative;
+  padding-right: 10px;
+  z-index: 1;
+  & img:nth-child(1) { margin-right: auto; }
+  & img:nth-child(2) { margin: -18px auto 0; z-index: -1; padding-right: 10px; }
+  & img:nth-child(3) { margin: -10px 5px 0 auto; }
+}
+
+/* Clan grid */
+.clan-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 220px);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 14px;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  width: 100%;
+  padding-left: 4em;
+  margin: auto;
+  & .clan-grid-title {
+    position: absolute;
+    left: 1.75em;
+    font-family: Plus Jakarta Sans;
+    font-size: 34px;
+    letter-spacing: 0;
+
+    &.top {
+      top: 0;
+      transform-origin: left top;
+      transform: rotate(-90deg) translate(-100%, -100%);
+    }
+    &.bottom {
+      bottom: -5vh;
+      transform-origin: left bottom;
+      transform: rotate(-90deg);
+    }
+  }
+  &.damas {
+    & .clan-p {
+      &:nth-of-type(2),
+      &:nth-of-type(5) {
+        top: 5vh;
+      }
+    }
+  }
+  &.damos {
+    & .clan-p {
+      &:nth-of-type(1), &:nth-of-type(4),
+      &:nth-of-type(3), &:nth-of-type(6) {
+        top: 5vh;
+      }
+    }
+    &:before {
+      content: '';
+      width: 160px;
+      height: 160px;
+      background: transparent url(images/groomsmen-bouquet.png) no-repeat center center;
+      background-size: contain;
+      opacity: 0;
+      position: absolute;
+      top: 0;
+      right: 0;
+      transform: translate(-80%, -60%);
+      transition: transform 500ms ease-out, opacity 500ms ease;
+    }
+  }
+}
+.slide-animated .clan-grid.damos:before {
+  opacity: 1;
+  transform: translate(-80%, -80%);
+}
+.clan-p {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr;
+  position: relative;
+  overflow: hidden;
+  &:after {
+    content: '';
+    display: block;
+    width: 100%;
+    height: 100%;
+    background-color: var(--secondary-teal);
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 0;
+    opacity: 0;
+    transition: opacity 0.5s linear;
+  }
+  & .clan-p-img,
+  & .clan-p-info {
+    grid-area: 1 / 1 / 2 / 2;
+  }
+  & .clan-p-img {
+    z-index: 0;
+    width: 100%;
+    height: auto;
+    -o-object-fit: cover;
+       object-fit: cover;
+    -o-object-position: center;
+       object-position: center;
+    transition: transform 0.5s ease-in-out;
+    transform-origin: center center;
+    transform: translateX(0);
+    position: relative;
+  }
+  & .clan-p-info {
+    z-index: 1;
+    background-color: var(--alter);
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex-end;
+    align-items: flex-start;
+    padding: 5px 5px 5px 17px;
+    width: 70%;
+    justify-self: flex-end;
+    transform-origin: center center;
+    transform: translateX(100%);
+    transition: transform 0.5s ease-in-out;
+    & .clan-p-fname {
+      font-family: Cormorant Infant;
+      font-weight: 700;
+      font-style: italic;
+      font-size: 60px;
+      writing-mode: sideways-lr;
+      line-height: 100%;
+      letter-spacing: 0%;
+      opacity: .1;
+      color: var(--secondary-teal);
+      margin: 0 auto 0 -26px;
+    }
+    & .clan-p-name {
+      font-family: Cormorant Infant;
+      font-weight: 700;
+      font-size: 24px;
+      line-height: 100%;
+      letter-spacing: 0%;
+      color: var(--secondary-teal);
+      margin: auto 0 8px;
+    }
+    & .clan-p-desc {
+      font-family: Plus Jakarta Sans;
+      line-height: 1.05;
+      font-weight: 400;
+      font-size: 14px;
+      letter-spacing: 0;
+      margin-bottom: auto;
+    }
+  }
+  &:hover, &:active {
+    & .clan-p-info {
+      transform: translateX(0);
+    }
+    & .clan-p-img {
+      transform: translateX(-30%);
+    }
+    &:after {
+      opacity: 0.5;
+    }
+    &.left .clan-p-img {
+      transform: translateX(-15%);
+    }
+    &.right .clan-p-img {
+      transform: translateX(-50%);
+    }
+  }
+}
+
+/* Section 3.3 - END - */
+.slide.end {
+  background: var(--white) url(images/3-cierre-MAH05809.png) no-repeat center center;
+  background-size: cover;
+  flex-flow: column nowrap;
+  justify-content: space-between;
+}
+
 @keyframes flowers{
   100% {
     opacity: 1;
@@ -5300,7 +5581,6 @@ img.img-effect-grayscale:nth-child(even):hover,
 (-o-min-device-pixel-ratio: 2/1),
 (min-device-pixel-ratio: 2) {
   .home {
-    background-image: url(images/1-hero-image@2x.png);
     &:after {
       background-image: url(images/flores3@2x.png);
     }
@@ -5323,5 +5603,191 @@ img.img-effect-grayscale:nth-child(even):hover,
   .slide.gifts::after {
       background-image: url(images/flores2@2x.png);
   }
+  .slide.bridesmaids::before {
+    background-image: url(images/flores4@2x.png);
+  }
+  .slide.bridesmaids::after {
+    background-image: url(images/bridesmaids-bouquet@2x.png);
+  }
 
+}
+
+/* RSVP */
+#mc_embed_signup {
+  --spacing: 36px;
+
+  clear: left;
+  max-width: 600px;
+  font-family: Plus Jakarta Sans;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 100%;
+  letter-spacing: 0;
+  color: var(--secondary);
+  & form {
+    padding: 0;
+    margin: 0;
+  }
+  & input,
+  & textarea,
+  & .button {
+    background-color: transparent;
+    border: 0;
+    border-bottom: 2px solid var(--primary);
+    border-radius: 0;
+    -webkit-appearance: none;
+       -moz-appearance: none;
+            appearance: none;
+    outline: none;
+    transition: border-color 0.3s ease-in-out, background-color 0.3s ease;
+    padding: .5em 1em;
+    &:focus, &:hover {
+      border-color: var(--primary-light);
+      background-color: rgba(255, 255, 255, 0.5);
+    }
+  }
+  & .button {
+    background-color: var(--primary);
+    border: 0;
+    color: var(--white);
+    padding: 9px 32px;
+    display: block;
+    height: auto;
+    font-size: 18px;
+    line-height: 100%;
+    font-weight: 600;
+    transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+    border-radius: 10px;
+    &:hover {
+      background-color: var(--primary-light);
+      color: var(--white);
+    }
+  }
+  & .indicates-required {
+    font-size: 16px;
+    margin: 0;
+    padding: 0;
+  }
+  & #mc-embedded-subscribe-form input.mce_inline_error {
+    border: 0;
+    border-bottom: 2px solid #e85c41;
+  }
+  & .mc-field-group {
+    margin-bottom: var(--spacing);
+  }
+  & label {
+    line-height: var(--spacing);
+    font-weight: 600;
+  }
+  & .mc-field-group.input-group {
+    position: relative;
+    & input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+      position: absolute;
+      &:focus + label:before {
+        background: var(--gray);
+        box-shadow: var(--gray) 0 0 0 2px;
+      }
+      &:checked + label:before {
+        background: var(--primary);
+        box-shadow: var(--primary) 0 0 0 2px;
+      }
+    }
+    & label {
+      font-weight: 400;
+      &:before {
+        content: '';
+        display: inline-block;
+        box-sizing: border-box;
+        width: 19px;
+        height: 19px;
+        margin: 0 23px 0 0;
+        vertical-align: text-bottom;
+        border: 2px solid var(--white);
+        box-shadow: var(--primary) 0 0 0 2px;
+        background-color: var(--white);
+        border-radius: 50%;
+        transition: background-color 0.3s ease, box-shadow 0.3s ease;
+      }
+    }
+  }
+  & .helper_text {
+    display: block;
+    margin: 0;
+    padding: 0;
+    color: var(--secondary);
+    background-color: transparent;
+    border-radius: 0;
+    font-size: inherit;
+    font-weight: inherit;
+    font-family: inherit;
+    font-style: normal;
+  }
+  & b, & strong {
+    font-weight: 600;
+  }
+}
+.rsvp {
+  display: grid;
+  justify-content: center;
+  align-items: stretch;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr;
+  width: 100%;
+  height: 100vh;
+  margin: 0;
+}
+.rsvp-image {
+  position: relative;
+  & img {
+    width: 100%;
+    height: 100%;
+    -o-object-fit: cover;
+       object-fit: cover;
+    -o-object-position: center;
+       object-position: center;
+    position: absolute;;
+  }
+}
+.rsvp-form {
+  width: 80%;
+  margin: 0 auto;
+}
+.rsvp-form-header-img {
+  display: block;
+  margin-bottom: 42px;
+}
+@media screen and (max-width: 1024px) {
+  .rsvp {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr;
+    height: auto;
+  }
+  .rsvp-form {
+    order: -1;
+    z-index: 1;
+    background-color: var(--white);
+  }
+  .rsvp-image {
+    position: static;
+    & img {
+      width: 100vw;
+      height: 100vh;
+      -o-object-fit: cover;
+         object-fit: cover;
+      -o-object-position: center;
+         object-position: center;
+      position: fixed;
+      bottom: 0;
+    }
+  }
+  .rsvp-form-header-img {
+    margin-bottom: 24px;
+  }
+  .rsvp-form {
+    width: 100%;
+    padding: 5%;
+  }
 }
