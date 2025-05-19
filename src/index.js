@@ -1,6 +1,6 @@
 import "./styles.css";
 
-const SAFARI_SNAP_FIX_TIMEOUT = 200;
+const SAFARI_SNAP_FIX_TIMEOUT = 150;
 
 const $sections = document.querySelectorAll('.section');
 const $sliders = document.querySelectorAll('.slider');
@@ -9,8 +9,6 @@ const initialHash = window.location.hash;
 
 let currentSection = 0;
 let isScrolling = false;
-let scrollWheel = 0;
-
 
 document.addEventListener('DOMContentLoaded', () => {
   if (!$sections.length || !$sliders.length) return;
@@ -30,13 +28,34 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
   } else { // Desktop devices
+    const attachSlidesEvents = () => {
+      if (slidesObserver) {
+        slidesObserver.disconnect();
+      }
+      $sections[currentSection].querySelectorAll('.slide').forEach(slide => slidesObserver.observe(slide))
+    }
+
+    const observeSlides = (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('slide-animated');
+        }
+        if (!entry.isIntersecting) {
+          entry.target.classList.remove('slide-animated');
+        }
+      })
+    }
+
     const observeSections = (entries) => {
       entries.forEach((entry) => {
         if (entry.intersectionRatio === 1) {
           setTimeout(() => {
-            scrollWheel = 0;
             isScrolling = false;
-          }, 1000);
+            attachSlidesEvents();
+          }, 600);
+        }
+        if (entry.isIntersecting) {
+          isScrolling = false;
         }
       })
     }
@@ -62,6 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const sectionsObserver = new IntersectionObserver(observeSections, { threshold: 1.0 });
+    const slidesObserver = new IntersectionObserver(observeSlides, { threshold: 1.0 });
     $sections.forEach(section => sectionsObserver.observe(section))
 
     let snapSectionTimer = null;
@@ -69,21 +89,20 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('wheel', (event) => {
       const slider = $sliders[currentSection];
 
-      if (snapSectionTimer) clearTimeout(snapSectionTimer);
-
       if (event.deltaX !== 0 || isScrolling) return;
 
       if (event.deltaY > 0) { // Scroll down
-        scrollWheel++;
-        if (slider.scrollLeft + slider.offsetWidth >= slider.scrollWidth || slider.scrollWidth - (slider.scrollLeft + slider.offsetWidth) === 1) { // Last slide
+        if ( slider.scrollLeft + slider.offsetWidth >= slider.scrollWidth
+          || slider.scrollWidth - (slider.scrollLeft + slider.offsetWidth) === 1) { // Last slide
           if (currentSection < $sections.length - 1) { // Next section
             isScrolling = true;
             currentSection++;
             $sections[currentSection].scrollIntoView({ behavior: 'smooth' });
           }
         } else {
-          slider.scrollBy({ left: event.deltaY, behavior: 'smooth' });
+          slider.scrollBy({ left: event.deltaY, behavior: isSafari ? 'auto' : 'smooth' });
           if (isSafari) { // Force snap behavior in Safari
+            clearTimeout(snapSectionTimer);
             snapSectionTimer = setTimeout(() => {
               isScrolling = true;
               snapSection('next')
@@ -91,7 +110,6 @@ document.addEventListener('DOMContentLoaded', () => {
           }
         }
       } else if (event.deltaY < 0) { // Scroll up
-        scrollWheel--;
         if (slider.scrollLeft === 0) {
           if (currentSection > 0) { // Previous section
             isScrolling = true;
@@ -99,8 +117,9 @@ document.addEventListener('DOMContentLoaded', () => {
             $sections[currentSection].scrollIntoView({ behavior: 'smooth' });
           }
         } else {
-          slider.scrollBy({ left: event.deltaY, behavior: 'smooth' });
+          slider.scrollBy({ left: event.deltaY, behavior: isSafari ? 'auto' : 'smooth' });
           if (isSafari) { // Force snap behavior in Safari
+            clearTimeout(snapSectionTimer);
             snapSectionTimer = setTimeout(() => {
               isScrolling = true;
               snapSection('prev')
@@ -108,26 +127,12 @@ document.addEventListener('DOMContentLoaded', () => {
           }
         }
       }
-
-      if (!isSafari) {
-        if (scrollWheel < -1 || scrollWheel > 1) {
-          isScrolling = true;
-          setTimeout(() => {
-            scrollWheel = 0;
-            isScrolling = false;
-          }, 1000);
-        }
-      }
-
-      /* Enable animations here */
-
     });
 
     if (initialHash) {
       const $slideToShow = document.querySelector(initialHash);
       if ($slideToShow) {
         $slideToShow.scrollIntoView({ behavior: 'smooth' });
-        scrollWheel = 0;
         isScrolling = false;
       }
     }
@@ -138,7 +143,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if ($slideToShow) {
           setTimeout(() => {
             $slideToShow.scrollIntoView({ behavior: 'smooth' });
-            scrollWheel = 0;
             isScrolling = false;
           }, 0);
         }
@@ -148,7 +152,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const $giftsSecionVideo = document.querySelector('#love');
     if ($giftsSecionVideo) {
       $giftsSecionVideo.addEventListener('click', () => {
-        if ( $giftsSecionVideo.paused ) {
+        if ($giftsSecionVideo.paused) {
           $giftsSecionVideo.play();
         } else {
           $giftsSecionVideo.pause();
