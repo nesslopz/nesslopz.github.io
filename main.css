@@ -4519,16 +4519,61 @@ a {
   }
 }
 
-@media screen and (max-width: 768px) and (orientation: landscape) {
-  html {
+@media screen and (orientation: portrait) {
+  html::after {
+    background-color: rgba(0,0,0,0);
+    transition: background-color 0.3s ease-in-out;
+  }
+  html.mobile body {
+    opacity: 0.5;
+  }
+  html.mobile::before {
+    content: '';
+    display: block;
+    position: fixed;
+    top: calc(50% - 150px);
+    left: calc(50% - 50px);
+    transform: rotate(90deg);
+    height: 50px;
+    width: 100px;
+    border: 3px solid white;
+    border-radius: 10px;
+    z-index: 1;
+    animation: rotateDevice 1.5s ease-in-out infinite alternate;
+  }
+  html.mobile::after {
+    content: 'Te recomendamos ingresar desde un dispositivo de escritorio';
+    display: block;
+    position: fixed;
+    padding: 0 10%;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-color: rgba(0,0,0,0.9);
+    color: var(--white);
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.5s ease-in-out forwards;
+  }
+}
+
+@media screen and (orientation: landscape) {
+  html.mobile {
     position: relative;
     width: 100%;
     height: 100%;
     overflow: initial;
+    &::before, &::after {
+      content: '';
+      display: none;
+    }
   }
 
-  body,
-  html {
+  html.mobile,
+  html.mobile body {
     overflow: initial;
   }
 
@@ -4540,7 +4585,6 @@ a {
   .section {
     overflow: visible;
   }
-
 }
 
 h1,
@@ -4571,7 +4615,6 @@ h3 {
 }
 
 @media screen and (min-width: 768px) {
-
   html,
   body {
     overflow: hidden;
@@ -4725,6 +4768,17 @@ img.img-effect-grayscale:nth-child(even):hover,
   }
 }
 
+@keyframes rotateDevice {
+  0% {
+		transform: rotate(-90deg)
+	}
+	50% {
+		transform: rotate(-180deg)
+	}
+	100% {
+		transform: rotate(-180deg)
+	}
+}
 @keyframes home-bg {
   0% {
     opacity: 0;
@@ -5113,10 +5167,7 @@ img.img-effect-grayscale:nth-child(even):hover,
   z-index: 1;
   height: 100%;
   & .video-gifts {
-    & video {
-      height: 100%;
-      width: auto;
-    }
+    margin: auto;
   }
   & .info {
     margin-top: 48px;

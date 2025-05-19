@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', function () {
   if (!$sections.length || !$sliders.length) return;
   if (/Mobi|Movi|Android/i.test(navigator.userAgent)) {
     // Mobile devices
+    document.documentElement.classList.add('mobile'); // add class 'mobile' to html tag
     if (window.addEventListener) {
       window.addEventListener("load", function () {
         setTimeout(function () {
