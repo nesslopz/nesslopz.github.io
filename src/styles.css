@@ -1142,6 +1142,35 @@ img.img-effect-grayscale:nth-child(even):hover,
   background-size: cover;
   flex-flow: column nowrap;
   justify-content: space-between;
+  align-items: center;
+  color: var(--white);
+  padding: 100px 85px 0px;
+}
+
+.bye {
+  font-family: Cormorant Infant;
+  font-weight: 500;
+  font-size: 32px;
+  line-height: 100%;
+  letter-spacing: 0;
+  align-self: flex-start;
+}
+
+.footer {
+  text-align: center;
+  & img {
+    width: 70%;
+    height: auto;
+    margin: 0 auto;
+  }
+  & .copy {
+    font-family: Cormorant Infant;
+    font-weight: 500;
+    font-style: italic;
+    font-size: 20px;
+    line-height: 100%;
+    letter-spacing: 0;
+  }
 }
 
 @keyframes flowers{
