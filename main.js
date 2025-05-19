@@ -155,10 +155,15 @@ document.addEventListener('DOMContentLoaded', function () {
     if (initialHash) {
       var $slideToShow = document.querySelector(initialHash);
       if ($slideToShow) {
+        var _$slideToShow$previou;
         $slideToShow.scrollIntoView({
           behavior: 'smooth'
         });
         isScrolling = false;
+        $slideToShow.classList.add('slide-animated');
+        (_$slideToShow$previou = $slideToShow.previousElementSibling) === null || _$slideToShow$previou === void 0 || (_$slideToShow$previou = _$slideToShow$previou.classList) === null || _$slideToShow$previou === void 0 || _$slideToShow$previou.add('slide-animated');
+        var $section = $slideToShow.closest('.section');
+        currentSection = Array.from($sections).indexOf($section);
       }
     }
     window.addEventListener('popstate', function (event) {
@@ -174,14 +179,27 @@ document.addEventListener('DOMContentLoaded', function () {
         }
       }
     });
-    var $giftsSecionVideo = document.querySelector('#love');
-    if ($giftsSecionVideo) {
-      $giftsSecionVideo.addEventListener('click', function () {
-        if ($giftsSecionVideo.paused) {
-          $giftsSecionVideo.play();
+    var $giftsSectionVideo = document.querySelector('#love');
+    if ($giftsSectionVideo) {
+      $giftsSectionVideo.setAttribute('stopped', '');
+      $giftsSectionVideo.addEventListener('click', function () {
+        if ($giftsSectionVideo.paused) {
+          $giftsSectionVideo.play();
+          if ($giftsSectionVideo.hasAttribute('stopped')) {
+            $giftsSectionVideo.removeAttribute('stopped');
+          }
         } else {
-          $giftsSecionVideo.pause();
+          $giftsSectionVideo.pause();
         }
+      });
+      $giftsSectionVideo.addEventListener('mouseenter', function () {
+        // do nothing if video is stopped (poster)
+        if ($giftsSectionVideo.hasAttribute('stopped')) return;
+        // show controls only if video is playing
+        $giftsSectionVideo.setAttribute("controls", "");
+      });
+      $giftsSectionVideo.addEventListener('mouseleave', function () {
+        $giftsSectionVideo.removeAttribute("controls");
       });
     }
   }
