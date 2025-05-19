@@ -134,6 +134,11 @@ document.addEventListener('DOMContentLoaded', () => {
       if ($slideToShow) {
         $slideToShow.scrollIntoView({ behavior: 'smooth' });
         isScrolling = false;
+        $slideToShow.classList.add('slide-animated');
+        $slideToShow.previousElementSibling?.classList?.add('slide-animated');
+
+        const $section = $slideToShow.closest('.section');
+        currentSection = Array.from($sections).indexOf($section);
       }
     }
 
@@ -149,14 +154,27 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
-    const $giftsSecionVideo = document.querySelector('#love');
-    if ($giftsSecionVideo) {
-      $giftsSecionVideo.addEventListener('click', () => {
-        if ($giftsSecionVideo.paused) {
-          $giftsSecionVideo.play();
+    const $giftsSectionVideo = document.querySelector('#love');
+    if ($giftsSectionVideo) {
+      $giftsSectionVideo.setAttribute('stopped', '');
+      $giftsSectionVideo.addEventListener('click', () => {
+        if ($giftsSectionVideo.paused) {
+          $giftsSectionVideo.play();
+          if ( $giftsSectionVideo.hasAttribute('stopped') ) {
+            $giftsSectionVideo.removeAttribute('stopped');
+          }
         } else {
-          $giftsSecionVideo.pause();
+          $giftsSectionVideo.pause();
         }
+      });
+      $giftsSectionVideo.addEventListener('mouseenter', () => {
+        // do nothing if video is stopped (poster)
+        if ($giftsSectionVideo.hasAttribute('stopped')) return;
+        // show controls only if video is playing
+        $giftsSectionVideo.setAttribute("controls", "");
+      });
+      $giftsSectionVideo.addEventListener('mouseleave', () => {
+        $giftsSectionVideo.removeAttribute("controls");
       });
     }
   }
