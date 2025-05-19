@@ -4444,6 +4444,7 @@ html {
   height: 100%;
   background-color: var(--white);
   scroll-snap-type: block mandatory;
+  -webkit-scroll-behavior: smooth;
   scroll-behavior: smooth;
 
   font-family: "Plus Jakarta Sans", sans-serif;
@@ -4461,6 +4462,7 @@ html.page-rsvp, html.page-rsvp body {
   height: auto;
   background-color: var(--white);
   scroll-snap-type: none;
+  -webkit-scroll-behavior: auto;
   scroll-behavior: auto;
   position: relative;
 }
@@ -4482,7 +4484,9 @@ body:before {
   content: '';
   height: 20vh;
   display: flex;
+  -webkit-scroll-snap-align: start;
   scroll-snap-align: start;
+  -webkit-scroll-snap-stop: normal;
   scroll-snap-stop: normal;
 }
 
@@ -4632,7 +4636,9 @@ h3 {
 .section {
   height: 100vh;
   display: flex;
+  -webkit-scroll-snap-align: start;
   scroll-snap-align: start;
+  -webkit-scroll-snap-stop: always;
   scroll-snap-stop: always;
   overflow: hidden;
 }
@@ -4648,6 +4654,7 @@ h3 {
   flex: 1;
   scroll-snap-type: x mandatory;
   overflow: auto hidden;
+  -webkit-scroll-behavior: smooth;
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
   /* Mejora el scroll en Safari */
@@ -4669,7 +4676,9 @@ h3 {
 .slide {
   flex: 0 0 100%;
   height: 100%;
+  -webkit-scroll-snap-align: start;
   scroll-snap-align: start;
+  -webkit-scroll-snap-stop: always;
   scroll-snap-stop: always;
   display: flex;
   justify-content: center;
@@ -4761,7 +4770,7 @@ img.img-effect-grayscale:nth-child(even):hover,
     background-size: contain;
 
     opacity: 0;
-    animation: flowers 3s 1s ease-out forwards;
+
     --translation: 11%;
     --rotation: -5.31deg;
     transform: rotate(0deg) translateY(calc(var(--translation) * 2 ));
@@ -4998,7 +5007,7 @@ img.img-effect-grayscale:nth-child(even):hover,
     --rotation: 0deg;
     --translation: 0;
     transform: rotate(var(--rotation)) translateY(var(--translation));
-    animation: flowers 3s 1s ease-out forwards;
+
   }
   &::before {
     background-image: url(images/flores5.png);
@@ -5054,7 +5063,6 @@ img.img-effect-grayscale:nth-child(even):hover,
 
     background-image: url(images/flores4.png);
     transform: rotate(-5deg) translateY(0);
-    animation: flowers 3s 0s ease-out forwards;
   }
 }
 .details-image {
@@ -5134,7 +5142,7 @@ img.img-effect-grayscale:nth-child(even):hover,
     --rotation: 0deg;
     --translation: 0;
     transform: rotate(var(--rotation)) translateY(var(--translation));
-    animation: flowers 3s 1s ease-out forwards;
+
   }
   &::before {
     background-image: url(images/flores1.png);
@@ -5212,7 +5220,7 @@ img.img-effect-grayscale:nth-child(even):hover,
     background-image: url(images/flores6.png);
     opacity: 0;
 
-    animation: flowers 3s 1s ease-out forwards;
+
 
     width: 40%;
     height: 35%;
@@ -5378,7 +5386,7 @@ img.img-effect-grayscale:nth-child(even):hover,
     --rotation: 0deg;
     --translation: 0;
     transform: rotate(var(--rotation)) translateY(var(--translation));
-    animation: flowers 3s 1s ease-out forwards;
+
   }
   &::before {
     background-image: url(images/flores4.png);
@@ -5420,7 +5428,7 @@ img.img-effect-grayscale:nth-child(even):hover,
     --rotation      : -54deg;
     transform       : rotate(-50deg) translateY(0);
 
-    animation: flowers 3s 1s ease-out forwards;
+
   }
 }
 
@@ -5871,3 +5879,24 @@ img.img-effect-grayscale:nth-child(even):hover,
     padding: 5%;
   }
 }
+
+.slide::before,
+.slide::after {
+  animation-name: flowers;
+  animation-duration: 3s;
+  animation-fill-mode: forwards;
+  animation-timing-function: ease-out;
+  animation-delay: 500ms;
+  animation-play-state: paused;
+}
+
+.animate__animated {
+  animation-play-state: paused;
+}
+.slide-animated::before,
+.slide-animated::after,
+.slide-animated + .slide::before,
+.slide-animated .animate__animated {
+  animation-play-state: running;
+}
+

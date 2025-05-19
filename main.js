@@ -1,14 +1,13 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
 
-var SAFARI_SNAP_FIX_TIMEOUT = 200;
+var SAFARI_SNAP_FIX_TIMEOUT = 150;
 var $sections = document.querySelectorAll('.section');
 var $sliders = document.querySelectorAll('.slider');
 var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 var initialHash = window.location.hash;
 var currentSection = 0;
 var isScrolling = false;
-var scrollWheel = 0;
 document.addEventListener('DOMContentLoaded', function () {
   if (!$sections.length || !$sliders.length) return;
   if (/Mobi|Movi|Android/i.test(navigator.userAgent)) {
@@ -28,13 +27,34 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   } else {
     // Desktop devices
+    var attachSlidesEvents = function attachSlidesEvents() {
+      if (slidesObserver) {
+        slidesObserver.disconnect();
+      }
+      $sections[currentSection].querySelectorAll('.slide').forEach(function (slide) {
+        return slidesObserver.observe(slide);
+      });
+    };
+    var observeSlides = function observeSlides(entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('slide-animated');
+        }
+        if (!entry.isIntersecting) {
+          entry.target.classList.remove('slide-animated');
+        }
+      });
+    };
     var observeSections = function observeSections(entries) {
       entries.forEach(function (entry) {
         if (entry.intersectionRatio === 1) {
           setTimeout(function () {
-            scrollWheel = 0;
             isScrolling = false;
-          }, 1000);
+            attachSlidesEvents();
+          }, 600);
+        }
+        if (entry.isIntersecting) {
+          isScrolling = false;
         }
       });
     };
@@ -69,17 +89,18 @@ document.addEventListener('DOMContentLoaded', function () {
     var sectionsObserver = new IntersectionObserver(observeSections, {
       threshold: 1.0
     });
+    var slidesObserver = new IntersectionObserver(observeSlides, {
+      threshold: 1.0
+    });
     $sections.forEach(function (section) {
       return sectionsObserver.observe(section);
     });
     var snapSectionTimer = null;
     document.addEventListener('wheel', function (event) {
       var slider = $sliders[currentSection];
-      if (snapSectionTimer) clearTimeout(snapSectionTimer);
       if (event.deltaX !== 0 || isScrolling) return;
       if (event.deltaY > 0) {
         // Scroll down
-        scrollWheel++;
         if (slider.scrollLeft + slider.offsetWidth >= slider.scrollWidth || slider.scrollWidth - (slider.scrollLeft + slider.offsetWidth) === 1) {
           // Last slide
           if (currentSection < $sections.length - 1) {
@@ -93,10 +114,11 @@ document.addEventListener('DOMContentLoaded', function () {
         } else {
           slider.scrollBy({
             left: event.deltaY,
-            behavior: 'smooth'
+            behavior: isSafari ? 'auto' : 'smooth'
           });
           if (isSafari) {
             // Force snap behavior in Safari
+            clearTimeout(snapSectionTimer);
             snapSectionTimer = setTimeout(function () {
               isScrolling = true;
               snapSection('next');
@@ -105,7 +127,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
       } else if (event.deltaY < 0) {
         // Scroll up
-        scrollWheel--;
         if (slider.scrollLeft === 0) {
           if (currentSection > 0) {
             // Previous section
@@ -118,10 +139,11 @@ document.addEventListener('DOMContentLoaded', function () {
         } else {
           slider.scrollBy({
             left: event.deltaY,
-            behavior: 'smooth'
+            behavior: isSafari ? 'auto' : 'smooth'
           });
           if (isSafari) {
             // Force snap behavior in Safari
+            clearTimeout(snapSectionTimer);
             snapSectionTimer = setTimeout(function () {
               isScrolling = true;
               snapSection('prev');
@@ -129,17 +151,6 @@ document.addEventListener('DOMContentLoaded', function () {
           }
         }
       }
-      if (!isSafari) {
-        if (scrollWheel < -1 || scrollWheel > 1) {
-          isScrolling = true;
-          setTimeout(function () {
-            scrollWheel = 0;
-            isScrolling = false;
-          }, 1000);
-        }
-      }
-
-      /* Enable animations here */
     });
     if (initialHash) {
       var $slideToShow = document.querySelector(initialHash);
@@ -147,7 +158,6 @@ document.addEventListener('DOMContentLoaded', function () {
         $slideToShow.scrollIntoView({
           behavior: 'smooth'
         });
-        scrollWheel = 0;
         isScrolling = false;
       }
     }
@@ -159,7 +169,6 @@ document.addEventListener('DOMContentLoaded', function () {
             _$slideToShow.scrollIntoView({
               behavior: 'smooth'
             });
-            scrollWheel = 0;
             isScrolling = false;
           }, 0);
         }
