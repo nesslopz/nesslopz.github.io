@@ -45,9 +45,9 @@ document.addEventListener('DOMContentLoaded', () => {
             isScrolling = false;
           }, SNAP_FIX_TIMEOUT);
         }
-        if (!entry.isIntersecting) {
-          entry.target.classList.remove('slide-animated');
-        }
+        // if (!entry.isIntersecting) {
+        //   entry.target.classList.remove('slide-animated');
+        // }
       })
     }
 
@@ -123,29 +123,29 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
+    const showSlide = ($slideToShow = $el) => {
+      if ($slideToShow) {
+        setTimeout(() => {
+          $slideToShow.scrollIntoView({ behavior: 'smooth' });
+          isScrolling = false;
+          $slideToShow.classList.add('slide-animated');
+          $slideToShow.previousElementSibling?.classList?.add('slide-animated');
+
+          const $section = $slideToShow.closest('.section');
+          currentSection = Array.from($sections).indexOf($section);
+        }, 0);
+      }
+    }
+
     if (initialHash) {
       const $slideToShow = document.querySelector(initialHash);
-      if ($slideToShow) {
-        $slideToShow.scrollIntoView({ behavior: 'smooth' });
-        isScrolling = false;
-        $slideToShow.classList.add('slide-animated');
-        $slideToShow.previousElementSibling?.classList?.add('slide-animated');
-
-        const $section = $slideToShow.closest('.section');
-        currentSection = Array.from($sections).indexOf($section);
-      }
+      showSlide($slideToShow);
     }
 
     window.addEventListener('popstate', (event) => {
       if (location.hash && location.hash !== "") {
         const $slideToShow = document.querySelector(location.hash);
-        if ($slideToShow) {
-          isScrolling = true;
-          setTimeout(() => {
-            $slideToShow.scrollIntoView({ behavior: 'smooth' });
-            isScrolling = false;
-          }, 0);
-        }
+        showSlide($slideToShow);
       }
     });
 
