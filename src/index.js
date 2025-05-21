@@ -1,6 +1,6 @@
 import "./styles.css";
 
-const SAFARI_SNAP_FIX_TIMEOUT = 150;
+const SNAP_FIX_TIMEOUT = 1000;
 
 const $sections = document.querySelectorAll('.section');
 const $sliders = document.querySelectorAll('.slider');
@@ -9,6 +9,7 @@ const initialHash = window.location.hash;
 
 let currentSection = 0;
 let isScrolling = false;
+let snapSectionTimer = null;
 
 document.addEventListener('DOMContentLoaded', () => {
   if (!$sections.length || !$sliders.length) return;
@@ -39,6 +40,10 @@ document.addEventListener('DOMContentLoaded', () => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           entry.target.classList.add('slide-animated');
+          clearTimeout(snapSectionTimer);
+          snapSectionTimer = setTimeout(() => {
+            isScrolling = false;
+          }, SNAP_FIX_TIMEOUT);
         }
         if (!entry.isIntersecting) {
           entry.target.classList.remove('slide-animated');
@@ -49,42 +54,42 @@ document.addEventListener('DOMContentLoaded', () => {
     const observeSections = (entries) => {
       entries.forEach((entry) => {
         if (entry.intersectionRatio === 1) {
-          setTimeout(() => {
+          attachSlidesEvents();
+          clearTimeout(snapSectionTimer);
+          snapSectionTimer = setTimeout(() => {
             isScrolling = false;
-            attachSlidesEvents();
-          }, 600);
-        }
-        if (entry.isIntersecting) {
-          isScrolling = false;
+          }, SNAP_FIX_TIMEOUT);
         }
       })
     }
 
-    /* Safari fix to snap sections automatically (emulates auto-snap) */
+    /* fix to snap sections automatically (emulates auto-snap) */
     const snapSection = (direction = '') => {
       if (!direction) return;
 
+      isScrolling = true;
       const slider = $sliders[currentSection];
       const pos = parseInt(slider.scrollLeft / slider.offsetWidth);
-      const intersectionNextSlide = (slider.scrollLeft % slider.offsetWidth) / slider.offsetWidth;
 
-      if (direction === 'next' && intersectionNextSlide >= 0.1) {
+      if (direction === 'next') {
         const nextSlide = pos + 1;
         slider.scrollTo({ left: nextSlide * slider.offsetWidth, behavior: 'smooth' });
-      } else if (direction === 'prev' && intersectionNextSlide <= 0.8) {
-        const prevSlide = pos;
+      } else if (direction === 'prev') {
+        const prevSlide = pos - 1;
         slider.scrollTo({ left: prevSlide * slider.offsetWidth, behavior: 'smooth' });
-      } else {
-        slider.scrollTo({ left: pos * slider.offsetWidth, behavior: 'smooth' });
       }
-      isScrolling = false;
     }
 
     const sectionsObserver = new IntersectionObserver(observeSections, { threshold: 1.0 });
     const slidesObserver = new IntersectionObserver(observeSlides, { threshold: 1.0 });
     $sections.forEach(section => sectionsObserver.observe(section))
 
-    let snapSectionTimer = null;
+    setInterval(() => {
+      // Prevent to block scroll after a while
+      if (!snapSectionTimer && isScrolling) {
+        isScrolling = false;
+      }
+    }, SNAP_FIX_TIMEOUT * 3);
 
     document.addEventListener('wheel', (event) => {
       const slider = $sliders[currentSection];
@@ -97,17 +102,12 @@ document.addEventListener('DOMContentLoaded', () => {
           if (currentSection < $sections.length - 1) { // Next section
             isScrolling = true;
             currentSection++;
+            $sections[currentSection].scrollTo({ top: 0, left: 0, behavior: 'smooth' }); // reset next section position
             $sections[currentSection].scrollIntoView({ behavior: 'smooth' });
           }
         } else {
-          slider.scrollBy({ left: event.deltaY, behavior: isSafari ? 'auto' : 'smooth' });
-          if (isSafari) { // Force snap behavior in Safari
-            clearTimeout(snapSectionTimer);
-            snapSectionTimer = setTimeout(() => {
-              isScrolling = true;
-              snapSection('next')
-            }, SAFARI_SNAP_FIX_TIMEOUT);
-          }
+          isScrolling = true;
+          snapSection('next');
         }
       } else if (event.deltaY < 0) { // Scroll up
         if (slider.scrollLeft === 0) {
@@ -117,14 +117,8 @@ document.addEventListener('DOMContentLoaded', () => {
             $sections[currentSection].scrollIntoView({ behavior: 'smooth' });
           }
         } else {
-          slider.scrollBy({ left: event.deltaY, behavior: isSafari ? 'auto' : 'smooth' });
-          if (isSafari) { // Force snap behavior in Safari
-            clearTimeout(snapSectionTimer);
-            snapSectionTimer = setTimeout(() => {
-              isScrolling = true;
-              snapSection('prev')
-            }, SAFARI_SNAP_FIX_TIMEOUT);
-          }
+          isScrolling = true;
+          snapSection('prev');
         }
       }
     });
@@ -146,6 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (location.hash && location.hash !== "") {
         const $slideToShow = document.querySelector(location.hash);
         if ($slideToShow) {
+          isScrolling = true;
           setTimeout(() => {
             $slideToShow.scrollIntoView({ behavior: 'smooth' });
             isScrolling = false;
