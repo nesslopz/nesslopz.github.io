@@ -4684,7 +4684,7 @@ h3 {
   justify-content: center;
   align-items: center;
   position: relative;
-  padding: 60px 60px 0;
+  padding: 0;
 }
 .slide:last-child {
   overflow: hidden;
@@ -4738,9 +4738,28 @@ img  {
     }
   }
 }
+
+img.img-effect-perspective,
+.img-effect-perspective img {
+  transition: transform 500ms ease;
+  transform: perspective(1000px) rotateY(0deg);
+  &:hover {
+    transition: transform 1s ease;
+    transform: perspective(1000px) rotateY(10deg);
+  }
+}
+
+img.img-effect-perspective.alternate,
+.img-effect-perspective.alternate img {
+  &:hover {
+    transform: perspective(1000px) rotateY(-10deg);
+  }
+}
+
+
 img.img-effect-grayscale,
 .img-effect-grayscale img {
-  filter: grayscale(0%) brightness(120%);
+  filter: grayscale(0%) brightness(100%);
   transition: filter 500ms ease, transform 500ms ease;
   transform: perspective(1000px) rotateY(0deg);
   &:hover {
@@ -4813,7 +4832,7 @@ img.img-effect-grayscale:nth-child(even):hover,
   min-width: 500px;
   max-width: 50%;
   position: absolute;
-  top: 182px;
+  top: 19vh;
   font-size: 0;
   line-height: 0;
   margin: 0;
@@ -4898,7 +4917,7 @@ img.img-effect-grayscale:nth-child(even):hover,
 
 /* Section 1.2 */
 .grid-data {
-  grid-template-columns: 1fr 30% 1fr;
+  grid-template-columns: 1fr minmax(25%, 440px) 1fr;
   grid-template-rows: 1fr auto;
   grid-template-areas:
     ". gospel ."
@@ -4946,6 +4965,9 @@ img.img-effect-grayscale:nth-child(even):hover,
   & .photo {
     grid-area: photo;
     line-height: 0;
+    & img {
+      margin: 0 auto;
+    }
   }
   & .data-info {
     grid-area: info;
@@ -5001,8 +5023,7 @@ img.img-effect-grayscale:nth-child(even):hover,
   display: grid;
   grid-template-columns: repeat(3, 23%);
   justify-content: space-between;
-  padding-top: 100px;
-  padding-bottom: 60px;
+  padding: 12vh 60px 1vh;
   /* Flores */
   &::before,
   &::after {
@@ -5053,7 +5074,7 @@ img.img-effect-grayscale:nth-child(even):hover,
 
 /* Section 1.4: Details */
 .details {
-  padding-top: 100px;
+  padding-top: 8vh;
   padding-right: 0;
   &::before {
     content: '';
@@ -5076,7 +5097,7 @@ img.img-effect-grayscale:nth-child(even):hover,
 }
 .details-image {
   display: block;
-  width: 45vw;
+  width: 90vh;
   height: auto;
   margin: 0;
   position: absolute;
@@ -5177,17 +5198,17 @@ img.img-effect-grayscale:nth-child(even):hover,
 }
 .gifts-section {
   display: grid;
-  grid-template-columns: 30% 1fr 26%;
+  grid-template-columns: 25% 28% 25%;
   align-items: flex-start;
   justify-content: center;
   gap: 76px;
   z-index: 1;
   height: 100%;
   & .video-gifts {
-    margin: auto;
+    margin: 48px auto;
   }
   & .info {
-    margin-top: 48px;
+    margin: auto;
     line-height: 34px;
     span {
       line-height: 34px;
@@ -5445,7 +5466,7 @@ img.img-effect-grayscale:nth-child(even):hover,
 .groomsmen-grid {
   display: grid;
   grid-template-columns: 414px auto;
-  justify-content: space-between;
+  justify-content: space-evenly;
   align-items: center;
   z-index: 1;
   width: 100%;
@@ -5477,7 +5498,7 @@ img.img-effect-grayscale:nth-child(even):hover,
   align-items: center;
   position: relative;
   width: 100%;
-  padding-left: 4em;
+  padding-left: 4.5em;
   margin: auto;
   & .clan-grid-title {
     position: absolute;
@@ -5598,13 +5619,13 @@ img.img-effect-grayscale:nth-child(even):hover,
       font-family: Cormorant Infant;
       font-weight: 700;
       font-style: italic;
-      font-size: 60px;
+      font-size: 50px;
       writing-mode: sideways-lr;
       line-height: 100%;
       letter-spacing: 0%;
       opacity: .1;
       color: var(--secondary-teal);
-      margin: 0 auto 0 -26px;
+      margin: 5px auto 0 -26px;
     }
     & .clan-p-name {
       font-family: Cormorant Infant;
@@ -5781,10 +5802,10 @@ img.img-effect-grayscale:nth-child(even):hover,
     display: block;
     height: auto;
     font-size: 18px;
-    line-height: 100%;
+    line-height: 1;
     font-weight: 600;
     transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
-    border-radius: 10px;
+    border-radius: 50px;
     &:hover {
       background-color: var(--primary-light);
       color: var(--white);
@@ -5879,12 +5900,16 @@ img.img-effect-grayscale:nth-child(even):hover,
   }
 }
 .rsvp-form {
-  width: 80%;
+  width: 70%;
   margin: 0 auto;
+  max-width: 600px;
+  padding: 5% 0;
 }
 .rsvp-form-header-img {
   display: block;
   margin-bottom: 42px;
+  width: 80%;
+  margin: 5% auto;
 }
 @media screen and (max-width: 1024px) {
   .rsvp {
@@ -5935,6 +5960,8 @@ img.img-effect-grayscale:nth-child(even):hover,
 .slide-animated::before,
 .slide-animated::after,
 .slide-animated + .slide::before,
+.slider:has(.slide.details.slide-animated)::after,
+.slider:has(.slide.details.slide-animated) .details-image,
 .slide-animated .animate__animated {
   animation-play-state: running;
 }

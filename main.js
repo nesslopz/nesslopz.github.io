@@ -1,13 +1,14 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
 
-var SAFARI_SNAP_FIX_TIMEOUT = 150;
+var SNAP_FIX_TIMEOUT = 1000;
 var $sections = document.querySelectorAll('.section');
 var $sliders = document.querySelectorAll('.slider');
 var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 var initialHash = window.location.hash;
 var currentSection = 0;
 var isScrolling = false;
+var snapSectionTimer = null;
 document.addEventListener('DOMContentLoaded', function () {
   if (!$sections.length || !$sliders.length) return;
   if (/Mobi|Movi|Android/i.test(navigator.userAgent)) {
@@ -39,52 +40,48 @@ document.addEventListener('DOMContentLoaded', function () {
       entries.forEach(function (entry) {
         if (entry.isIntersecting) {
           entry.target.classList.add('slide-animated');
+          clearTimeout(snapSectionTimer);
+          snapSectionTimer = setTimeout(function () {
+            isScrolling = false;
+          }, SNAP_FIX_TIMEOUT);
         }
-        if (!entry.isIntersecting) {
-          entry.target.classList.remove('slide-animated');
-        }
+        // if (!entry.isIntersecting) {
+        //   entry.target.classList.remove('slide-animated');
+        // }
       });
     };
     var observeSections = function observeSections(entries) {
       entries.forEach(function (entry) {
         if (entry.intersectionRatio === 1) {
-          setTimeout(function () {
+          attachSlidesEvents();
+          clearTimeout(snapSectionTimer);
+          snapSectionTimer = setTimeout(function () {
             isScrolling = false;
-            attachSlidesEvents();
-          }, 600);
-        }
-        if (entry.isIntersecting) {
-          isScrolling = false;
+          }, SNAP_FIX_TIMEOUT);
         }
       });
     };
 
-    /* Safari fix to snap sections automatically (emulates auto-snap) */
+    /* fix to snap sections automatically (emulates auto-snap) */
     var snapSection = function snapSection() {
       var direction = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
       if (!direction) return;
+      isScrolling = true;
       var slider = $sliders[currentSection];
       var pos = parseInt(slider.scrollLeft / slider.offsetWidth);
-      var intersectionNextSlide = slider.scrollLeft % slider.offsetWidth / slider.offsetWidth;
-      if (direction === 'next' && intersectionNextSlide >= 0.1) {
+      if (direction === 'next') {
         var nextSlide = pos + 1;
         slider.scrollTo({
           left: nextSlide * slider.offsetWidth,
           behavior: 'smooth'
         });
-      } else if (direction === 'prev' && intersectionNextSlide <= 0.8) {
-        var prevSlide = pos;
+      } else if (direction === 'prev') {
+        var prevSlide = pos - 1;
         slider.scrollTo({
           left: prevSlide * slider.offsetWidth,
           behavior: 'smooth'
         });
-      } else {
-        slider.scrollTo({
-          left: pos * slider.offsetWidth,
-          behavior: 'smooth'
-        });
       }
-      isScrolling = false;
     };
     var sectionsObserver = new IntersectionObserver(observeSections, {
       threshold: 1.0
@@ -95,7 +92,12 @@ document.addEventListener('DOMContentLoaded', function () {
     $sections.forEach(function (section) {
       return sectionsObserver.observe(section);
     });
-    var snapSectionTimer = null;
+    setInterval(function () {
+      // Prevent to block scroll after a while
+      if (!snapSectionTimer && isScrolling) {
+        isScrolling = false;
+      }
+    }, SNAP_FIX_TIMEOUT * 3);
     document.addEventListener('wheel', function (event) {
       var slider = $sliders[currentSection];
       if (event.deltaX !== 0 || isScrolling) return;
@@ -107,23 +109,18 @@ document.addEventListener('DOMContentLoaded', function () {
             // Next section
             isScrolling = true;
             currentSection++;
+            $sections[currentSection].scrollTo({
+              top: 0,
+              left: 0,
+              behavior: 'smooth'
+            }); // reset next section position
             $sections[currentSection].scrollIntoView({
               behavior: 'smooth'
             });
           }
         } else {
-          slider.scrollBy({
-            left: event.deltaY,
-            behavior: isSafari ? 'auto' : 'smooth'
-          });
-          if (isSafari) {
-            // Force snap behavior in Safari
-            clearTimeout(snapSectionTimer);
-            snapSectionTimer = setTimeout(function () {
-              isScrolling = true;
-              snapSection('next');
-            }, SAFARI_SNAP_FIX_TIMEOUT);
-          }
+          isScrolling = true;
+          snapSection('next');
         }
       } else if (event.deltaY < 0) {
         // Scroll up
@@ -137,46 +134,35 @@ document.addEventListener('DOMContentLoaded', function () {
             });
           }
         } else {
-          slider.scrollBy({
-            left: event.deltaY,
-            behavior: isSafari ? 'auto' : 'smooth'
-          });
-          if (isSafari) {
-            // Force snap behavior in Safari
-            clearTimeout(snapSectionTimer);
-            snapSectionTimer = setTimeout(function () {
-              isScrolling = true;
-              snapSection('prev');
-            }, SAFARI_SNAP_FIX_TIMEOUT);
-          }
+          isScrolling = true;
+          snapSection('prev');
         }
       }
     });
+    var showSlide = function showSlide() {
+      var $slideToShow = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : $el;
+      if ($slideToShow) {
+        setTimeout(function () {
+          var _$slideToShow$previou;
+          $slideToShow.scrollIntoView({
+            behavior: 'smooth'
+          });
+          isScrolling = false;
+          $slideToShow.classList.add('slide-animated');
+          (_$slideToShow$previou = $slideToShow.previousElementSibling) === null || _$slideToShow$previou === void 0 || (_$slideToShow$previou = _$slideToShow$previou.classList) === null || _$slideToShow$previou === void 0 || _$slideToShow$previou.add('slide-animated');
+          var $section = $slideToShow.closest('.section');
+          currentSection = Array.from($sections).indexOf($section);
+        }, 0);
+      }
+    };
     if (initialHash) {
       var $slideToShow = document.querySelector(initialHash);
-      if ($slideToShow) {
-        var _$slideToShow$previou;
-        $slideToShow.scrollIntoView({
-          behavior: 'smooth'
-        });
-        isScrolling = false;
-        $slideToShow.classList.add('slide-animated');
-        (_$slideToShow$previou = $slideToShow.previousElementSibling) === null || _$slideToShow$previou === void 0 || (_$slideToShow$previou = _$slideToShow$previou.classList) === null || _$slideToShow$previou === void 0 || _$slideToShow$previou.add('slide-animated');
-        var $section = $slideToShow.closest('.section');
-        currentSection = Array.from($sections).indexOf($section);
-      }
+      showSlide($slideToShow);
     }
     window.addEventListener('popstate', function (event) {
       if (location.hash && location.hash !== "") {
         var _$slideToShow = document.querySelector(location.hash);
-        if (_$slideToShow) {
-          setTimeout(function () {
-            _$slideToShow.scrollIntoView({
-              behavior: 'smooth'
-            });
-            isScrolling = false;
-          }, 0);
-        }
+        showSlide(_$slideToShow);
       }
     });
     var $giftsSectionVideo = document.querySelector('#love');
