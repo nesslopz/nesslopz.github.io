@@ -4523,8 +4523,35 @@ a {
   }
 }
 
+/* Temp disable mobile */
+html.mobile::after {
+  background-color: rgba(0,0,0,0);
+  transition: background-color 0.3s ease-in-out;
+}
+html.mobile body {
+  opacity: 0.5;
+  visibility: hidden;
+}
+html.mobile::after {
+  content: 'Te recomendamos ingresar desde un dispositivo de escritorio';
+  display: block;
+  position: fixed;
+  padding: 0 10%;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background-color: rgba(0,0,0,0.9);
+  color: var(--white);
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.5s ease-in-out forwards;
+}
+
 @media screen and (orientation: portrait) {
-  html::after {
+/*   html::after {
     background-color: rgba(0,0,0,0);
     transition: background-color 0.3s ease-in-out;
   }
@@ -4561,11 +4588,11 @@ a {
     align-items: center;
     justify-content: center;
     animation: fadeIn 0.5s ease-in-out forwards;
-  }
+  } */
 }
 
 @media screen and (orientation: landscape) {
-  html.mobile {
+/*   html.mobile {
     position: relative;
     width: 100%;
     height: 100%;
@@ -4579,7 +4606,7 @@ a {
   html.mobile,
   html.mobile body {
     overflow: initial;
-  }
+  } */
 
   html.page-rsvp, html.page-rsvp body {
     overflow: initial;
