@@ -4721,6 +4721,33 @@ img  {
     background-color: var(--primary);
     color: var(--white);
   }
+  &.w-icon {
+    display: inline-block;
+    margin-top: 22px;
+    padding: 0 0 0 17px;
+    border-color: var(--primary-light);
+    &:hover {
+      background: var(--primary-light);
+      border-color: var(--primary-light);
+    }
+    &::after {
+      content: '';
+      background: var(--primary-light) url(images/instagram.png) no-repeat center center;
+      background-size: 18px;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: inline-block;
+      opacity: 1;
+      transform: none;
+      position: static;
+      vertical-align: top;
+      margin: 0%;
+    }
+    &.instagram:after {
+      background-image: url(images/instagram.png);
+    }
+  }
 }
 
 .img-effect-scale {
@@ -5241,7 +5268,7 @@ img.img-effect-grayscale:nth-child(even):hover,
 /* Section 2.2 Factos I */
 .slide-factos {
   /* Flores */
-  &::before {
+  &::after {
     content: '';
     position: absolute;
     display: block;
@@ -5249,8 +5276,6 @@ img.img-effect-grayscale:nth-child(even):hover,
     background-size: contain;
     background-image: url(images/flores6.png);
     opacity: 0;
-
-
 
     width: 40%;
     height: 35%;
@@ -5261,23 +5286,48 @@ img.img-effect-grayscale:nth-child(even):hover,
     --translation: -10%;
     transform: rotate(0deg) translateY(0);
   }
+  &::before {
+    content: '';
+    position: absolute;
+    display: block;
+    background: transparent none no-repeat center center;
+    background-size: contain;
+    background-image: url(images/flores11.png);
+    opacity: 0;
+
+    width: 30vw;
+    height: 20vh;
+    top: 28%;
+    right: -7%;
+
+    --rotation: 11.3deg;
+    --translation: -10%;
+    transform: rotate(20deg) translateY(-50%);
+  }
 }
 .factos-section {
   display: grid;
-  grid-template-columns: 400px 1fr 1fr;
+  grid-template-columns: auto 26% 24%;
+  justify-content: space-between;
   align-items: stretch;
-  padding-top: 70px;
   gap: 0 20px;
-  height: 100%;;
+  width: 100%;
+  padding: 0 55vh 0 60px;
+  & p {
+    font-size: 20px;
+    line-height: 36px;
+  }
+  & .info span, & i {
+    font-size: 34px;
+    line-height: 36px;
+  }
   & i {
     color: var(--primary);
-    font-size: 28px;
-    line-height: 30px;
     font-weight: 500;
     font-style: italic;
   }
   & .column:nth-child(1) {
-    margin-top: 15%;
+    margin-top: 18%;
     .info-description {
       max-width: 320px;
       margin-top: 38px;
@@ -5285,22 +5335,15 @@ img.img-effect-grayscale:nth-child(even):hover,
   }
   & .column:nth-child(2) {
     margin: 0;
-    & img {
-      width: 260px;
-    }
     & p {
       margin-top: 48px;
       max-width: 280px;
     }
   }
   & .column:nth-child(3) {
-    margin: auto 0 20%;
+    padding-right: 0;
     & img {
-      width: 236px;
-      /* margin-top: 60px; */
-      position: relative;
-      left: -15%;
-      top: 60px;
+      margin-top: 60px;
     }
     & p {
       max-width: 382px;
@@ -5323,14 +5366,15 @@ img.img-effect-grayscale:nth-child(even):hover,
   }
 }
 .factos-image-up {
-  height: 30vh;
+  height: 34vh;
   width: auto;
-  transform: translateX(10%);
+  transform: translateX(70%);
+  z-index: 1;
 }
 .factos-image-down {
   top: auto;
   bottom: 0;
-  height: 40vh;
+  height: 39vh;
   width: auto;
   transform: translateX(50%);
 }
@@ -5338,49 +5382,65 @@ img.img-effect-grayscale:nth-child(even):hover,
 /* Section 2.3 Factos II */
 .slide-factos-ii {
   padding: 0 60px;
+  &::before {
+    content: '';
+    position: absolute;
+    display: block;
+    background: transparent none no-repeat center center;
+    background-size: contain;
+    background-image: url(images/flores3.png);
+    opacity: 0;
+
+    width: 50vh;
+    height: 50vh;
+    top: -22%;
+    left: 18%;
+
+    --rotation: 86.57deg;
+    --translation: -10%;
+    transform: rotate(20deg) translateY(-50%);
+  }
 }
 .factos-grid {
   display: grid;
-  grid-template-columns: 310px 20% auto;
-  width: 100%;
+  grid-template-columns: 25% 19% 40%;
   height: 100%;
+  width: 100%;
+  padding: 60px;
   gap: 50px;
   align-items: stretch;
-  justify-content: space-between;
+  justify-content: space-evenly;
 
   & .column {
     display: flex;
     flex-flow: column nowrap;
-    justify-content: space-around;
+    justify-content: center;
     align-items: center;
     gap: 30px;
+    font-size: 20px;
+    line-height: 36px;
+    & i, & span {
+      font-size: 30px;
+      line-height: 36px;
+    }
     &.info {
       display: block;
     }
   }
 
-  & .column:nth-child(1) { margin: auto; padding-bottom: 25%; }
+  & .column:nth-child(1) { margin: auto; padding-bottom: 5vh; }
   & .column:nth-child(2) {
-    & img {
-      width: 90%;
-      margin-left: auto;
-      margin-right: -30px;
-      margin-top: 30%;
-    }
+    align-self: center;
   }
   & .column:nth-child(3) {
-    justify-content: space-between;
-    margin-right: -60px;
-
-    & p {
-      max-width: 446px;
-
-    }
+    justify-content: flex-end;
   }
 
   & .factos-grid-img-top {
-    /* position: relative; */
-    height: 40vh;
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 35vh;
     width: auto;
   }
   & .facts-last {
@@ -5389,13 +5449,10 @@ img.img-effect-grayscale:nth-child(even):hover,
     justify-content: space-between;
     width: 100%;
     padding-right: 15%;
-    p {
-      width: 200px;
-    }
-    img {
+    & img {
       height: 30vh;
       width: auto;
-      margin-left: -15%;
+      margin-right: 60px;
     }
   }
 
@@ -5740,6 +5797,9 @@ img.img-effect-grayscale:nth-child(even):hover,
     background-image: url(images/flores6@2x.png);
   }
   .slide-factos::before {
+    background-image: url(images/flores11@2x.png);
+  }
+  .slide-factos::after {
     background-image: url(images/flores6@2x.png);
   }
   .details::before {
