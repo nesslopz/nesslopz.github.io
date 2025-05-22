@@ -333,7 +333,7 @@ img  {
   &.w-icon {
     display: inline-block;
     margin-top: 22px;
-    padding: 0 0 0 17px;
+    padding: 0 0 0 22px;
     border-color: var(--primary-light);
     &:hover {
       background: var(--primary-light);
@@ -351,7 +351,7 @@ img  {
       transform: none;
       position: static;
       vertical-align: top;
-      margin: 0%;
+      margin: 0 0 0 8px;
     }
     &.instagram:after {
       background-image: url('././images/instagram.png');
@@ -988,7 +988,7 @@ img.img-effect-grayscale:nth-child(even):hover,
 
 /* Section 2.3 Factos II */
 .slide-factos-ii {
-  padding: 0 60px;
+  padding: 0;
   &::before {
     content: '';
     position: absolute;
@@ -1010,10 +1010,10 @@ img.img-effect-grayscale:nth-child(even):hover,
 }
 .factos-grid {
   display: grid;
-  grid-template-columns: 25% 19% 40%;
+  grid-template-columns: 23% 19% 40%;
   height: 100%;
   width: 100%;
-  padding: 60px;
+  padding: 60px 0 0 60px;
   gap: 50px;
   align-items: stretch;
   justify-content: space-evenly;
@@ -1024,18 +1024,12 @@ img.img-effect-grayscale:nth-child(even):hover,
     justify-content: center;
     align-items: center;
     gap: 30px;
-    font-size: 20px;
-    line-height: 36px;
-    & i, & span {
-      font-size: 30px;
-      line-height: 36px;
-    }
     &.info {
       display: block;
     }
   }
 
-  & .column:nth-child(1) { margin: auto; padding-bottom: 5vh; }
+  & .column:nth-child(1) { margin: auto; padding-bottom: 10vh; }
   & .column:nth-child(2) {
     align-self: center;
   }
@@ -1055,11 +1049,11 @@ img.img-effect-grayscale:nth-child(even):hover,
     flex-flow: row nowrap;
     justify-content: space-between;
     width: 100%;
-    padding-right: 15%;
+    padding-right: 0;
     & img {
-      height: 30vh;
+      height: 42vh;
       width: auto;
-      margin-right: 60px;
+      margin-right: 40px;
     }
   }
 
