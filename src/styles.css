@@ -1320,6 +1320,116 @@ img.img-effect-grayscale:nth-child(even):hover,
   }
 }
 
+#menciones {
+  margin-right: calc(35% - 390px);
+  margin-bottom: 60px;
+}
+dialog {
+  &[open] {
+    animation: slideInUp 0.5s ease-out forwards;
+  }
+  &::backdrop {
+    background-color: transparent;
+  }
+}
+.dialog-wrapper {
+  padding: 0;
+  border: 0;
+  color: var(--secondary)
+}
+.dialog-content {
+  width: 390px;
+  height: 60vh;
+  background-color: var(--alter);
+  padding: 38px 14px 65px;
+  margin: auto;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  text-align: center;
+}
+.carousel {
+  position: relative;
+  overflow: hidden;
+}
+.carousel-open:checked + .carousel-slide {
+  position: static;
+  opacity: 100;
+}
+
+.carousel-slide {
+  position: absolute;
+  opacity: 0;
+  transition: opacity 0.4s ease-out;
+}
+
+.carousel-slide-2 {
+  padding: 0 14px;
+}
+
+.carousel-slide img {
+  display: block;
+  height: auto;
+  max-width: 100%;
+}
+
+.carousel-control {
+  border: 1.5px solid var(--secondary-teal);
+  background-color: transparent;
+  border-radius: 50%;
+  color: var(--secondary-teal);
+  cursor: pointer;
+  display: none;
+  height: 25px;
+  line-height: 25px;
+  position: absolute;
+  bottom: 40px;
+  cursor: pointer;
+  text-align: center;
+  width: 25px;
+  z-index: 10;
+  &:before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    margin: 6px auto;
+    display: block;
+    border-width: 2px;
+    border-style: solid;
+    border-color: var(--secondary-teal) transparent transparent var(--secondary-teal);
+    opacity: 1;
+    transform: rotate(-45deg);
+    margin-left: 8px;
+    transform-origin: center center;
+  }
+  &:hover {
+    transform: scale(1.05);
+  }
+}
+
+.carousel-control.prev {
+  left: 25px;
+}
+
+.carousel-control.next {
+  right: 25px;
+  &:before {
+    margin-left: auto;
+    margin-right: 8px;
+    border-color: transparent var(--secondary-teal) var(--secondary-teal) transparent;
+  }
+}
+
+#carousel-1:checked ~ .control-1,
+#carousel-2:checked ~ .control-2,
+#carousel-3:checked ~ .control-3 {
+  display: block;
+}
+
+.menciones-list {
+  list-style: none;
+}
+
 /* Section 3.3 - END - */
 .slide.end {
   flex-flow: column nowrap;

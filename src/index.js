@@ -67,6 +67,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const snapSection = (direction = '') => {
       if (!direction) return;
 
+      if ( document.querySelector('dialog[open]') ) {
+        // If a dialog is open, close it before snapping
+        document.querySelector('dialog[open]').close();
+      }
       isScrolling = true;
       const slider = $sliders[currentSection];
       const pos = parseInt(slider.scrollLeft / slider.offsetWidth);
@@ -126,6 +130,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const showSlide = ($slideToShow = $el) => {
       if ($slideToShow) {
         setTimeout(() => {
+          let isModal = "dialog" === $slideToShow?.tagName.toLowerCase();
+          if (isModal) {
+            let $modal = $slideToShow;
+            $slideToShow = $modal.closest('.slide');
+            $modal.showModal();
+          }
           $slideToShow.scrollIntoView({ behavior: 'smooth' });
           isScrolling = false;
           $slideToShow.classList.add('slide-animated');
@@ -173,4 +183,12 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
   }
+  // Close the dialog when clicking backdrop
+  document.querySelectorAll('dialog').forEach(dialog => {
+    dialog.addEventListener('click', function (event) {
+      if (event.target === this) {
+        this.close();
+      }
+    });
+  });
 });

@@ -417,8 +417,40 @@
             </div>
             <div class="column info animate__animated animate__fadeIn animate__slow animate__delay-2s">
               <p>Por supuesto, nuestra boda no sería posible sin el apoyo de muchísimas otras personas que se han sumado para hacer realidad nuestro sueño. Desde el fondo de nuestro corazón, <br><span>¡muchas gracias!</span></p>
-              <!-- <a href="#">Menciones especiales</a> -->
+              <a href="#menciones">Menciones especiales</a>
             </div>
+            <dialog id="menciones" class="dialog-wrapper">
+              <div class="special-mentions info dialog-content carousel">
+                  <input class="carousel-open" type="radio" id="carousel-1" name="carousel" aria-hidden="true" hidden="" checked="checked">
+                  <div class="carousel-slide carousel-slide-1">
+                      <p>Desarrollamos este sitio en colaboración con nuestros talentosos amigos:</p>
+                      <ul class="menciones-list">
+                        <li>Berenice Herrera • <span>Lettering</span></li>
+                        <li>Leonardo Peña • <span>Diseño gráfico</span></li>
+                        <li>Néstor López  • <span>Desarrollo web</span></li>
+                        <li>Javier Ortiz • <span>Fotografía</span></li>
+                        <li>Sara Hidalgo • <span>Fotografía</span></li>
+                      </ul>
+                  </div>
+                  <input class="carousel-open" type="radio" id="carousel-2" name="carousel" aria-hidden="true" hidden="">
+                  <div class="carousel-slide carousel-slide-2">
+                    <p>Algunos de nuestros proveedores también son nuestros compas. <br>
+                      Gracias a su emprendimiento, podremos tener una hermosa boda sin los excesos de la industria. <br>
+                      ¡Apoyemos a los negocios locales!</p>
+                      <ul class="menciones-list">
+                        <li><span>Taller Macuca</span></li>
+                        <li><span>Lorien & Gildor Photobooth</span></li>
+                        <li><span>Color es Pasión</span></li>
+                        <li><span>Street Grass</span></li>
+                        <li><span>Panadería Canela</span></li>
+                      </ul>
+                  </div>
+                  <label for="carousel-2" class="carousel-control next control-1"></label>
+                  <label for="carousel-1" class="carousel-control prev control-2"></label>
+                  <label for="carousel-2" class="carousel-control prev control-3"></label>
+                  <label for="carousel-1" class="carousel-control next control-3"></label>
+              </div>
+            </dialog>
           </div>
         </article>
         <article class="slide end" id="end">
