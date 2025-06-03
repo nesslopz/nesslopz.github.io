@@ -66,6 +66,10 @@ document.addEventListener('DOMContentLoaded', function () {
     var snapSection = function snapSection() {
       var direction = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
       if (!direction) return;
+      if (document.querySelector('dialog[open]')) {
+        // If a dialog is open, close it before snapping
+        document.querySelector('dialog[open]').close();
+      }
       isScrolling = true;
       var slider = $sliders[currentSection];
       var pos = parseInt(slider.scrollLeft / slider.offsetWidth);
@@ -143,7 +147,13 @@ document.addEventListener('DOMContentLoaded', function () {
       var $slideToShow = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : $el;
       if ($slideToShow) {
         setTimeout(function () {
-          var _$slideToShow$previou;
+          var _$slideToShow, _$slideToShow$previou;
+          var isModal = "dialog" === ((_$slideToShow = $slideToShow) === null || _$slideToShow === void 0 ? void 0 : _$slideToShow.tagName.toLowerCase());
+          if (isModal) {
+            var $modal = $slideToShow;
+            $slideToShow = $modal.closest('.slide');
+            $modal.showModal();
+          }
           $slideToShow.scrollIntoView({
             behavior: 'smooth'
           });
@@ -161,8 +171,8 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     window.addEventListener('popstate', function (event) {
       if (location.hash && location.hash !== "") {
-        var _$slideToShow = document.querySelector(location.hash);
-        showSlide(_$slideToShow);
+        var _$slideToShow2 = document.querySelector(location.hash);
+        showSlide(_$slideToShow2);
       }
     });
     var $giftsSectionVideo = document.querySelector('#love');
@@ -189,6 +199,14 @@ document.addEventListener('DOMContentLoaded', function () {
       });
     }
   }
+  // Close the dialog when clicking backdrop
+  document.querySelectorAll('dialog').forEach(function (dialog) {
+    dialog.addEventListener('click', function (event) {
+      if (event.target === this) {
+        this.close();
+      }
+    });
+  });
 });
 /******/ })()
 ;
