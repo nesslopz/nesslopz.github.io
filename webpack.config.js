@@ -66,14 +66,13 @@ module.exports = {
             filename: 'rsvp/index.html',
         }),
         new MiniCssExtractPlugin(),
-        /* new CopyWebpackPlugin({
+        new CopyWebpackPlugin({
             patterns: [
                 {
-                    from: path.resolve(__dirname, 'src/rsvp'),
-                    to: 'rsvp'
+                    from: path.resolve(__dirname, 'CNAME')
                 },
             ],
-        }), */
+        }),
         /*
         new ImageMinimizerPlugin({
             generator: [
