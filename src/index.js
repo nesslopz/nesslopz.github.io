@@ -45,9 +45,6 @@ document.addEventListener('DOMContentLoaded', () => {
             isScrolling = false;
           }, SNAP_FIX_TIMEOUT);
         }
-        // if (!entry.isIntersecting) {
-        //   entry.target.classList.remove('slide-animated');
-        // }
       })
     }
 
@@ -59,6 +56,11 @@ document.addEventListener('DOMContentLoaded', () => {
           snapSectionTimer = setTimeout(() => {
             isScrolling = false;
           }, SNAP_FIX_TIMEOUT);
+          // fix issue with snapping to the next section
+          setTimeout(() => {
+            currentSection = Array.from($sections).indexOf(entry.target);
+            isScrolling = false;
+          }, SNAP_FIX_TIMEOUT * 1.1);
         }
       })
     }
@@ -88,12 +90,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const slidesObserver = new IntersectionObserver(observeSlides, { threshold: 1.0 });
     $sections.forEach(section => sectionsObserver.observe(section))
 
-    setInterval(() => {
-      // Prevent to block scroll after a while
-      if (!snapSectionTimer && isScrolling) {
-        isScrolling = false;
-      }
-    }, SNAP_FIX_TIMEOUT * 3);
+/*     setInterval(() => {
+      console.log({ isScrolling, currentSection: currentSection + ' ' + $sections[currentSection].id });
+    }, SNAP_FIX_TIMEOUT); */
 
     document.addEventListener('wheel', (event) => {
       const slider = $sliders[currentSection];
@@ -163,12 +162,14 @@ document.addEventListener('DOMContentLoaded', () => {
     if ($giftsSectionVideo) {
       $giftsSectionVideo.setAttribute('stopped', '');
       $giftsSectionVideo.addEventListener('click', () => {
-        if ($giftsSectionVideo.paused) {
+        if ($giftsSectionVideo.paused && $giftsSectionVideo.hasAttribute('stopped') ) {
+          $giftsSectionVideo.removeAttribute('stopped');
           $giftsSectionVideo.play();
-          if ( $giftsSectionVideo.hasAttribute('stopped') ) {
-            $giftsSectionVideo.removeAttribute('stopped');
-          }
-        } else {
+          return
+        }
+        if (!isSafari && $giftsSectionVideo.paused) {
+          $giftsSectionVideo.play();
+        } else if (!isSafari && !$giftsSectionVideo.paused) {
           $giftsSectionVideo.pause();
         }
       });

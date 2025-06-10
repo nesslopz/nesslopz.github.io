@@ -1325,6 +1325,9 @@ img.img-effect-grayscale:nth-child(even):hover,
   margin-bottom: 60px;
 }
 dialog {
+  &:focus {
+    outline: none;
+  }
   &[open] {
     animation: slideInUp 0.5s ease-out forwards;
   }
@@ -1339,9 +1342,10 @@ dialog {
 }
 .dialog-content {
   width: 390px;
-  height: 60vh;
+  height: 50vh;
+  min-height: 400px;
   background-color: var(--alter);
-  padding: 38px 14px 65px;
+  padding: 38px 14px;
   margin: auto;
   display: flex;
   flex-flow: column nowrap;
@@ -1428,6 +1432,7 @@ dialog {
 
 .menciones-list {
   list-style: none;
+  padding: 0;
 }
 
 /* Section 3.3 - END - */
