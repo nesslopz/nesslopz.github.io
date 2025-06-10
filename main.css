@@ -5747,6 +5747,9 @@ img.img-effect-grayscale:nth-child(even):hover,
   margin-bottom: 60px;
 }
 dialog {
+  &:focus {
+    outline: none;
+  }
   &[open] {
     animation: slideInUp 0.5s ease-out forwards;
   }
@@ -5761,9 +5764,10 @@ dialog {
 }
 .dialog-content {
   width: 390px;
-  height: 60vh;
+  height: 50vh;
+  min-height: 400px;
   background-color: var(--alter);
-  padding: 38px 14px 65px;
+  padding: 38px 14px;
   margin: auto;
   display: flex;
   flex-flow: column nowrap;
@@ -5777,11 +5781,13 @@ dialog {
 .carousel-open:checked + .carousel-slide {
   position: static;
   opacity: 100;
+  z-index: 1;
 }
 
 .carousel-slide {
   position: absolute;
   opacity: 0;
+  z-index: -1;
   transition: opacity 0.4s ease-out;
 }
 
@@ -5850,6 +5856,7 @@ dialog {
 
 .menciones-list {
   list-style: none;
+  padding: 0;
 }
 
 /* Section 3.3 - END - */
