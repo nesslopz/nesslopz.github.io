@@ -18,25 +18,38 @@ document.addEventListener('DOMContentLoaded', function () {
       window.addEventListener("load", function () {
         setTimeout(function () {
           window.scrollTo(0, 0);
-        }, 0);
+        }, 1);
       });
       window.addEventListener("orientationchange", function () {
         setTimeout(function () {
           window.scrollTo(0, 0);
-        }, 0);
+        }, 1);
       });
     }
+    var observeSlides = function observeSlides(entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting || entry.intersectionRatio > 0) {
+          entry.target.classList.add('slide-animated');
+        }
+      });
+    };
+    var slidesObserver = new IntersectionObserver(observeSlides, {
+      threshold: 0.25
+    });
+    document.querySelectorAll('.slide').forEach(function (slide) {
+      return slidesObserver.observe(slide);
+    });
   } else {
     // Desktop devices
     var attachSlidesEvents = function attachSlidesEvents() {
-      if (slidesObserver) {
-        slidesObserver.disconnect();
+      if (_slidesObserver) {
+        _slidesObserver.disconnect();
       }
       $sections[currentSection].querySelectorAll('.slide').forEach(function (slide) {
-        return slidesObserver.observe(slide);
+        return _slidesObserver.observe(slide);
       });
     };
-    var observeSlides = function observeSlides(entries) {
+    var _observeSlides = function _observeSlides(entries) {
       entries.forEach(function (entry) {
         if (entry.isIntersecting) {
           entry.target.classList.add('slide-animated');
@@ -92,7 +105,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var sectionsObserver = new IntersectionObserver(observeSections, {
       threshold: 1.0
     });
-    var slidesObserver = new IntersectionObserver(observeSlides, {
+    var _slidesObserver = new IntersectionObserver(_observeSlides, {
       threshold: 1.0
     });
     $sections.forEach(function (section) {
@@ -144,63 +157,63 @@ document.addEventListener('DOMContentLoaded', function () {
         }
       }
     });
-    var showSlide = function showSlide() {
-      var $slideToShow = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : $el;
-      if ($slideToShow) {
-        setTimeout(function () {
-          var _$slideToShow, _$slideToShow$previou;
-          var isModal = "dialog" === ((_$slideToShow = $slideToShow) === null || _$slideToShow === void 0 ? void 0 : _$slideToShow.tagName.toLowerCase());
-          if (isModal) {
-            var $modal = $slideToShow;
-            $slideToShow = $modal.closest('.slide');
-            $modal.showModal();
-          }
-          $slideToShow.scrollIntoView({
-            behavior: 'smooth'
-          });
-          isScrolling = false;
-          $slideToShow.classList.add('slide-animated');
-          (_$slideToShow$previou = $slideToShow.previousElementSibling) === null || _$slideToShow$previou === void 0 || (_$slideToShow$previou = _$slideToShow$previou.classList) === null || _$slideToShow$previou === void 0 || _$slideToShow$previou.add('slide-animated');
-          var $section = $slideToShow.closest('.section');
-          currentSection = Array.from($sections).indexOf($section);
-        }, 0);
-      }
-    };
-    if (initialHash) {
-      var $slideToShow = document.querySelector(initialHash);
-      showSlide($slideToShow);
+  }
+  var showSlide = function showSlide() {
+    var $slideToShow = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : $el;
+    if ($slideToShow) {
+      setTimeout(function () {
+        var _$slideToShow, _$slideToShow$previou;
+        var isModal = "dialog" === ((_$slideToShow = $slideToShow) === null || _$slideToShow === void 0 ? void 0 : _$slideToShow.tagName.toLowerCase());
+        if (isModal) {
+          var $modal = $slideToShow;
+          $slideToShow = $modal.closest('.slide');
+          $modal.showModal();
+        }
+        $slideToShow.scrollIntoView({
+          behavior: 'smooth'
+        });
+        isScrolling = false;
+        $slideToShow.classList.add('slide-animated');
+        (_$slideToShow$previou = $slideToShow.previousElementSibling) === null || _$slideToShow$previou === void 0 || (_$slideToShow$previou = _$slideToShow$previou.classList) === null || _$slideToShow$previou === void 0 || _$slideToShow$previou.add('slide-animated');
+        var $section = $slideToShow.closest('.section');
+        currentSection = Array.from($sections).indexOf($section);
+      }, 0);
     }
-    window.addEventListener('popstate', function (event) {
-      if (location.hash && location.hash !== "") {
-        var _$slideToShow2 = document.querySelector(location.hash);
-        showSlide(_$slideToShow2);
+  };
+  if (initialHash) {
+    var $slideToShow = document.querySelector(initialHash);
+    showSlide($slideToShow);
+  }
+  window.addEventListener('popstate', function (event) {
+    if (location.hash && location.hash !== "") {
+      var _$slideToShow2 = document.querySelector(location.hash);
+      showSlide(_$slideToShow2);
+    }
+  });
+  var $giftsSectionVideo = document.querySelector('#love');
+  if ($giftsSectionVideo) {
+    $giftsSectionVideo.setAttribute('stopped', '');
+    $giftsSectionVideo.addEventListener('click', function () {
+      if ($giftsSectionVideo.paused && $giftsSectionVideo.hasAttribute('stopped')) {
+        $giftsSectionVideo.removeAttribute('stopped');
+        $giftsSectionVideo.play();
+        return;
+      }
+      if (!isSafari && $giftsSectionVideo.paused) {
+        $giftsSectionVideo.play();
+      } else if (!isSafari && !$giftsSectionVideo.paused) {
+        $giftsSectionVideo.pause();
       }
     });
-    var $giftsSectionVideo = document.querySelector('#love');
-    if ($giftsSectionVideo) {
-      $giftsSectionVideo.setAttribute('stopped', '');
-      $giftsSectionVideo.addEventListener('click', function () {
-        if ($giftsSectionVideo.paused && $giftsSectionVideo.hasAttribute('stopped')) {
-          $giftsSectionVideo.removeAttribute('stopped');
-          $giftsSectionVideo.play();
-          return;
-        }
-        if (!isSafari && $giftsSectionVideo.paused) {
-          $giftsSectionVideo.play();
-        } else if (!isSafari && !$giftsSectionVideo.paused) {
-          $giftsSectionVideo.pause();
-        }
-      });
-      $giftsSectionVideo.addEventListener('mouseenter', function () {
-        // do nothing if video is stopped (poster)
-        if ($giftsSectionVideo.hasAttribute('stopped')) return;
-        // show controls only if video is playing
-        $giftsSectionVideo.setAttribute("controls", "");
-      });
-      $giftsSectionVideo.addEventListener('mouseleave', function () {
-        $giftsSectionVideo.removeAttribute("controls");
-      });
-    }
+    $giftsSectionVideo.addEventListener('mouseenter', function () {
+      // do nothing if video is stopped (poster)
+      if ($giftsSectionVideo.hasAttribute('stopped')) return;
+      // show controls only if video is playing
+      $giftsSectionVideo.setAttribute("controls", "");
+    });
+    $giftsSectionVideo.addEventListener('mouseleave', function () {
+      $giftsSectionVideo.removeAttribute("controls");
+    });
   }
   // Close the dialog when clicking backdrop
   document.querySelectorAll('dialog').forEach(function (dialog) {
