@@ -20,14 +20,24 @@ document.addEventListener('DOMContentLoaded', () => {
       window.addEventListener("load", function () {
         setTimeout(function () {
           window.scrollTo(0, 0);
-        }, 0);
+        }, 1);
       });
       window.addEventListener("orientationchange", function () {
         setTimeout(function () {
           window.scrollTo(0, 0);
-        }, 0);
+        }, 1);
       });
     }
+    const observeSlides = (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting || entry.intersectionRatio > 0) {
+          entry.target.classList.add('slide-animated');
+        }
+      })
+    }
+    const slidesObserver = new IntersectionObserver(observeSlides, { threshold: 0.25 });
+    document.querySelectorAll('.slide').forEach(slide => slidesObserver.observe(slide))
+
   } else { // Desktop devices
     const attachSlidesEvents = () => {
       if (slidesObserver) {
@@ -125,64 +135,64 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }
     });
+  }
 
-    const showSlide = ($slideToShow = $el) => {
-      if ($slideToShow) {
-        setTimeout(() => {
-          let isModal = "dialog" === $slideToShow?.tagName.toLowerCase();
-          if (isModal) {
-            let $modal = $slideToShow;
-            $slideToShow = $modal.closest('.slide');
-            $modal.showModal();
-          }
-          $slideToShow.scrollIntoView({ behavior: 'smooth' });
-          isScrolling = false;
-          $slideToShow.classList.add('slide-animated');
-          $slideToShow.previousElementSibling?.classList?.add('slide-animated');
+  const showSlide = ($slideToShow = $el) => {
+    if ($slideToShow) {
+      setTimeout(() => {
+        let isModal = "dialog" === $slideToShow?.tagName.toLowerCase();
+        if (isModal) {
+          let $modal = $slideToShow;
+          $slideToShow = $modal.closest('.slide');
+          $modal.showModal();
+        }
+        $slideToShow.scrollIntoView({ behavior: 'smooth' });
+        isScrolling = false;
+        $slideToShow.classList.add('slide-animated');
+        $slideToShow.previousElementSibling?.classList?.add('slide-animated');
 
-          const $section = $slideToShow.closest('.section');
-          currentSection = Array.from($sections).indexOf($section);
-        }, 0);
-      }
+        const $section = $slideToShow.closest('.section');
+        currentSection = Array.from($sections).indexOf($section);
+      }, 0);
     }
+  }
 
-    if (initialHash) {
-      const $slideToShow = document.querySelector(initialHash);
+  if (initialHash) {
+    const $slideToShow = document.querySelector(initialHash);
+    showSlide($slideToShow);
+  }
+
+  window.addEventListener('popstate', (event) => {
+    if (location.hash && location.hash !== "") {
+      const $slideToShow = document.querySelector(location.hash);
       showSlide($slideToShow);
     }
+  });
 
-    window.addEventListener('popstate', (event) => {
-      if (location.hash && location.hash !== "") {
-        const $slideToShow = document.querySelector(location.hash);
-        showSlide($slideToShow);
+  const $giftsSectionVideo = document.querySelector('#love');
+  if ($giftsSectionVideo) {
+    $giftsSectionVideo.setAttribute('stopped', '');
+    $giftsSectionVideo.addEventListener('click', () => {
+      if ($giftsSectionVideo.paused && $giftsSectionVideo.hasAttribute('stopped') ) {
+        $giftsSectionVideo.removeAttribute('stopped');
+        $giftsSectionVideo.play();
+        return
+      }
+      if (!isSafari && $giftsSectionVideo.paused) {
+        $giftsSectionVideo.play();
+      } else if (!isSafari && !$giftsSectionVideo.paused) {
+        $giftsSectionVideo.pause();
       }
     });
-
-    const $giftsSectionVideo = document.querySelector('#love');
-    if ($giftsSectionVideo) {
-      $giftsSectionVideo.setAttribute('stopped', '');
-      $giftsSectionVideo.addEventListener('click', () => {
-        if ($giftsSectionVideo.paused && $giftsSectionVideo.hasAttribute('stopped') ) {
-          $giftsSectionVideo.removeAttribute('stopped');
-          $giftsSectionVideo.play();
-          return
-        }
-        if (!isSafari && $giftsSectionVideo.paused) {
-          $giftsSectionVideo.play();
-        } else if (!isSafari && !$giftsSectionVideo.paused) {
-          $giftsSectionVideo.pause();
-        }
-      });
-      $giftsSectionVideo.addEventListener('mouseenter', () => {
-        // do nothing if video is stopped (poster)
-        if ($giftsSectionVideo.hasAttribute('stopped')) return;
-        // show controls only if video is playing
-        $giftsSectionVideo.setAttribute("controls", "");
-      });
-      $giftsSectionVideo.addEventListener('mouseleave', () => {
-        $giftsSectionVideo.removeAttribute("controls");
-      });
-    }
+    $giftsSectionVideo.addEventListener('mouseenter', () => {
+      // do nothing if video is stopped (poster)
+      if ($giftsSectionVideo.hasAttribute('stopped')) return;
+      // show controls only if video is playing
+      $giftsSectionVideo.setAttribute("controls", "");
+    });
+    $giftsSectionVideo.addEventListener('mouseleave', () => {
+      $giftsSectionVideo.removeAttribute("controls");
+    });
   }
   // Close the dialog when clicking backdrop
   document.querySelectorAll('dialog').forEach(dialog => {
