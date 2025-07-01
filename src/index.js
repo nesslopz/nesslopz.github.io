@@ -1,3 +1,5 @@
+import Splide from '@splidejs/splide';
+import '@splidejs/splide/css';
 import "./styles.css";
 
 const SNAP_FIX_TIMEOUT = 1000;
@@ -7,6 +9,7 @@ const $sliders = document.querySelectorAll('.slider');
 const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 const initialHash = window.location.hash;
 
+
 let currentSection = 0;
 let isScrolling = false;
 let snapSectionTimer = null;
@@ -14,31 +17,6 @@ let snapSectionTimer = null;
 document.addEventListener('DOMContentLoaded', () => {
   if (!$sections.length || !$sliders.length) return;
 
-  if (/Mobi|Movi|Android/i.test(navigator.userAgent)) { // Mobile devices
-    document.documentElement.classList.add('mobile'); // add class 'mobile' to html tag
-    if (window.addEventListener) {
-      window.addEventListener("load", function () {
-        setTimeout(function () {
-          window.scrollTo(0, 0);
-        }, 1);
-      });
-      window.addEventListener("orientationchange", function () {
-        setTimeout(function () {
-          window.scrollTo(0, 0);
-        }, 1);
-      });
-    }
-    const observeSlides = (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting || entry.intersectionRatio > 0) {
-          entry.target.classList.add('slide-animated');
-        }
-      })
-    }
-    const slidesObserver = new IntersectionObserver(observeSlides, { threshold: 0.25 });
-    document.querySelectorAll('.slide').forEach(slide => slidesObserver.observe(slide))
-
-  } else { // Desktop devices
     const attachSlidesEvents = () => {
       if (slidesObserver) {
         slidesObserver.disconnect();
@@ -135,7 +113,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }
     });
-  }
 
   const showSlide = ($slideToShow = $el) => {
     if ($slideToShow) {
@@ -202,4 +179,10 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   });
+
+  /* full page slides, dots only, change colors */
+  new Splide( '.splide', {
+    arrows    : false,
+    type: 'slide'
+  } ).mount();
 });
